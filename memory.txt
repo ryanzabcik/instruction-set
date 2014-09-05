@@ -4,4 +4,4 @@ Memory Layout
 
 Addressing Modes
 ----------------
-Aligned word access
+Word-Addressable Only
