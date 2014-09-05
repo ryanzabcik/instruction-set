@@ -1,0 +1,188 @@
+16^3 (Sixteen Cubed)
+
+Goals:
+	- Easy to decode
+	- Easy to implement
+	- nothing exotic
+	- avoid implicit registers (only used in branch and link 
+instructions and maybe load/store)
+	- plenty of instruction space for expansion
+	- 3/2/1 operand instructions (with room for 0 operand 
+instructions)
+
+Features:
+
+- 16 16-bit GPRs (R0 - R15)
+	-R0 is hardwired 0
+	-R14 is Stack pointer
+	-R15 is Link Register
+- 16-bit address space
+- 16-bit fixed length instructions 
+- Special purpose registers: 16-bit PC, 32 bit Hi/Lo pair (for mult/div 
+results)
+- PC relative loads (rd,imm8 type)
+// NOTE: this may be more useful as stack pointer relative loads
+- Register  relative loads(rd,rs,imm4 type)
+- Subroutine calls through BEAL and JR
+
+
+Instruction formats:
+	-Register type
+	-Immediate type
+	-Jump type
+
+Register Type:
+
+3 operand:
+
+|1512|11 8|7  4|3  0|
+|-op-|-rd-|-rs-|-rt-|
+|0xxx|xxxx|xxxx|xxxx|
+
+2 operand:
+
+|1512|11 8|7  4|3  0|
+|-op-|-rd-|-rs-|-o2-|
+|0000|xxxx|xxxx|xxxx|
+
+1 operand:
+
+|1512|11 8|7  4|3  0|
+|-op-|-rd-|-03-|-o2-|
+|0000|xxxx|xxxx|0000|
+
+Immediate Type:
+
+1 operand + immediate 8:
+
+|1512|11 8|7      0|
+|-op-|-rd-|--imm8--|
+|1xxx|xxxx|xxxxxxxx|
+
+2 operand + immediate 4:
+
+|1512|11 8|7  4|3  0|
+|-op-|-rd-|-rs-|imm4|
+|011x|xxxx|xxxx|xxxx|
+
+Jump Type:
+
+|1512|11         0|
+|-op-|----imm12---|
+|1111|xxxxxxxxxxxx|
+
+
+
+ISA:
+---
+
+NAME | FORMAT     | OPERATION
+
+ADD  | rd,rs,rt   | rd = rs + rt
+SUB  | rd,rs,rt   | rd = rs - sr
+MULT | rd,rs      | HI =  upper16 (rd * rs), LO = lower16(rd, rs)
+DIV  | rd,rs      | HI = rd / rs, LO = rd % rs
+SHL  | rd,rs      | rd = rd << rs
+SHRL | rd,rs      | rd = rd >> rs logical
+SHRA | rd,rs      | rd = rd >> rs arithmetic
+
+SLT  | rd,rs      | rd = rs < 0 ? 1 : 0
+SLE  | rd,rs      | rd = rs <= 0 ? 1 : 0
+SGT  | rd,rs      | rd = rs > 0 ? 1 : 0
+SGE  | rd,rs      | rd = rs >- 0 ? 1 : 0
+SE   | rd,rs      | rd = rs == rd ? 1 : 0
+SNE  | rd,rs      | rd = rs != rd ? 1 : 0
+
+BE   | rd,imm8    | PC += rd == 0 ? imm8 << 1 : 0
+BEAL | rd,imm8    | R15 = PC + 2; PC += rd == 0 ? imm8 << 1: 0,
+            
+J    | imm12      | PC = imm12 << 1
+JR   | rd         | PC = rd
+
+LB   | rd,imm8    | rd = mem[PC + imm8] with sign extension
+LBU  | rd,imm8    | rd = mem[PC + imm8] without sign extension
+SB   | rd,imm8    | mem[PC + imm8] = rd
+LH   | rd,imm8    | rd = mem[PC + imm8 << 1]
+SH   | rd,imm8    | mem[PC + imm8 << 1] = rd
+LH   | rd,rs,imm4 | rd = mem[rs + imm4 << 1]
+SH   | rd,rs,imm4 | mem[rs + imm4 << 1] = rd
+
+MFHI | rd         | rd = HI
+MFLO | rd         | rd = LO
+MTHI | rd         | HI = rd
+MTLO | rd         | LO = rd
+
+OR   | rd,rs,rt   | rd = rs | rt
+XOR  | rd,rs,rt   | rd = rs ^ rt
+AND  | rd,rs,rt   | rd = rs & rt
+NOT  | rd,rs      | rd = ~rs
+
+Decode Tables:
+
+OP:
+
+0000 OP2 TABLE OPCODE
+0001 ADD rd,rs,rt
+0010 SUB rd,rs,rt 
+0011 AND rd,rs,rt
+0100 OR rd,rs,rt
+0101 XOR rd,rs,rt
+0110 SH rd,rs,imm4
+0111 LH rd,rs,imm4
+1000 LB rd,imm8
+1001 LBU rd,imm8
+1010 LH rd,imm8
+1011 SB rd,imm8
+1100 SH rd,imm8
+1101 BE rd,imm8
+1110 BEAL rd,imm8
+1111 J 
+
+OP2:
+0000 OP3 TABLE LOOKUP
+0001 MULT rd,rs
+0010 DIV  rd,rs
+0011 SLT  rd,rs
+0100 SLE  rd,rs
+0101 SGT  rd,rs
+0110 SGE  rd,rs
+0111 SE   rd,rs
+1000 SNE  rd,rs
+1001 NOT  rd,rs
+1010 SHL  rd,rs
+1011 SHRL rd,rs
+1100 SHRA rd,rs
+1101
+1110
+1111
+
+OP3:
+0000 JR   rd 
+0001 MFHI rd
+0010 MTHI rd
+0011 MFLO rd
+0100 MTLO rd
+0101 
+0110
+0111
+1000
+1001
+1010
+1011
+1100
+1101
+1110
+1111
+
+Calling Convention:
+
+R1, R2, R3, R4 are caller saved argument registers
+Functions with > 4 arguments can pass on the stack
+All other registers are callee saved
+Return value in R1
+
+Pseudo instructions:
+MOV rd,rs <--> add rd,rs,r0
+B   imm8  <--> BE  rd, imm8 (branch always)
+
+
