@@ -193,6 +193,6 @@ Return value in R1
 
 Pseudo instructions:
 MOV rd,rs <--> add rd,rs,r0
-B   imm8  <--> BE  rd, imm8 (branch always)
-
+B   imm8  <--> BE  r0, imm8 (branch always)
+BAL imm8  <--> BEAL r0, imm8
 
