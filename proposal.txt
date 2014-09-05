@@ -5,7 +5,7 @@ Goals:
 	- Easy to implement
 	- nothing exotic
 	- avoid implicit registers (only used in branch and link 
-instructions and maybe load/store)
+instructions and load/store)
 	- plenty of instruction space for expansion
 	- 3/2/1 operand instructions (with room for 0 operand 
 instructions)
@@ -14,8 +14,8 @@ Features:
 
 - 16 16-bit GPRs (R0 - R15)
 	-R0 is hardwired 0
-	-R14 is Stack pointer
-	-R15 is Link Register
+	-R14 is Stack pointer (SP)
+	-R15 is Link Register (LR) (also known as RA)
 - 16-bit address space
 - 16-bit fixed length instructions 
 - Special purpose registers: 16-bit PC, 32 bit Hi/Lo pair (for mult/div 
@@ -109,11 +109,11 @@ BEAL | rd,imm8    | R15 = PC + 2; PC += rd == 0 ? imm8 << 1: 0,
 J    | imm12      | PC = imm12 << 1
 JR   | rd         | PC = rd
 
-LB   | rd,imm8    | rd = mem[PC + imm8] with sign extension
-LBU  | rd,imm8    | rd = mem[PC + imm8] without sign extension
-SB   | rd,imm8    | mem[PC + imm8] = rd
-LH   | rd,imm8    | rd = mem[PC + imm8 << 1]
-SH   | rd,imm8    | mem[PC + imm8 << 1] = rd
+LB   | rd,imm8    | rd = mem[SP + imm8] with sign extension
+LBU  | rd,imm8    | rd = mem[SP + imm8] without sign extension
+SB   | rd,imm8    | mem[SP + imm8] = rd
+LH   | rd,imm8    | rd = mem[SP + imm8 << 1]
+SH   | rd,imm8    | mem[SP + imm8 << 1] = rd
 LH   | rd,rs,imm4 | rd = mem[rs + imm4 << 1]
 SH   | rd,rs,imm4 | mem[rs + imm4 << 1] = rd
 
