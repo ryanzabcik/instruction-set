@@ -17,7 +17,7 @@ Type C:
 Instruction List
 ----------------
 
-| Op  | Name | Type f=0 | Type f=1 | Description          | Operation f=1                    | Operation f=0                       |
+| Op  | Name | Type f=0 | Type f=1 | Description          | Operation f=0                    | Operation f=1                       |
 | --- | ---- | -------- | -------- | -------------------- | -------------------------------- | ----------------------------------- |
 | 0x0 | or   | B        | A        | bitwise or           | rd := ra or imm5                 | rd := ra or (rb << sh)              |
 | 0x1 | xor  | B        | A        | bitwise xor          | rd := ra xor imm5                | rd := ra xor (rb << sh)             |
@@ -29,12 +29,12 @@ Instruction List
 | 0x7 | sltu | B        | A        | set if unsigned less | rd := ra < imm5                  | rd := ra < (rb << sh)               |
 | 0x8 | mul  | B        | A        | multiply/shift left  | rd := ra << imm5                 | (rd,ra) := ra * rb                  |
 | 0x9 | div  | B        | A        | divide/shift right   | rd := ra >> imm5                 | ra := ra / rb ; rd := ra % rb       |
-| 0xa | ld   | B        | C        | load word            | rd := mem[rd + imm5<<1]          | rd := mem[pc + imm8<<1]             |
-| 0xb | st   | B        | C        | store word           | mem[rd + imm5<<1] := rd          | mem[pc + imm8<<1] := rd             |
-| 0xc | lea  | B        | C        | load address         | rd := rd + imm5<<1               | rd := pc + imm8<<1                  |
-| 0xd | call | B        | C        | branch and link      | rd := pc+2 ; pc := rd + imm5<<1  | rd := pc+2 ; pc := pc + imm8<<1     |
-| 0xe | breq | B        | C        | branch if zero       | pc := rd + imm5<<1 if rd == 0    | pc := pc + imm8<<1 if rd == 0       |
-| 0xf | brne | B        | C        | branch if not zero   | pc := rd + imm5<<1 if rd != 0    | pc := pc + imm8<<1 if rd != 0       |
+| 0xa | ld   | B        | C        | load word            | rd := mem[ra + imm5<<1]          | rd := mem[pc + imm8<<1]             |
+| 0xb | st   | B        | C        | store word           | mem[ra + imm5<<1] := rd          | mem[pc + imm8<<1] := rd             |
+| 0xc | lea  | B        | C        | load address         | rd := ra + imm5<<1               | rd := pc + imm8<<1                  |
+| 0xd | call | B        | C        | branch and link      | rd := pc+2 ; pc := ra + imm5<<1  | rd := pc+2 ; pc := pc + imm8<<1     |
+| 0xe | breq | B        | C        | branch if zero       | pc := ra + imm5<<1 if rd == 0    | pc := pc + imm8<<1 if rd == 0       |
+| 0xf | brne | B        | C        | branch if not zero   | pc := ra + imm5<<1 if rd != 0    | pc := pc + imm8<<1 if rd != 0       |
 
 
 Instruction Decoding
