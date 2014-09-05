@@ -97,7 +97,7 @@ SHRL | rd,rs      | rd = rd >> rs logical
 SHRA | rd,rs      | rd = rd >> rs arithmetic
 ADDI | rd,imm8    | rd = rd + imm8
 SUBI | rd,imm8    | rd = rd - imm8
-LI   | rd,imm8    | rd = imm8 with 0 extension
+LI   | rd,imm8    | rd = imm8 with sign extension
 
 SLT  | rd,rs      | rd = rs < 0 ? 1 : 0
 SLE  | rd,rs      | rd = rs <= 0 ? 1 : 0
