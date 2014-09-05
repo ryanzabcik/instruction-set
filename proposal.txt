@@ -25,6 +25,16 @@ results)
 - Register  relative loads(rd,rs,imm4 type)
 - Subroutine calls through BEAL and JR
 
+Terms:
+rd - destination reigster
+rs - source register
+rt - target register (second source register)
+imm4 - signed 4 bit immediate
+imm8 - signed 8 bit immediate
+imm12 - unsigned 12 bit immediate
+op - primary 4 bit opcode field
+op2 - secondary 4 bit opcode field
+op3 - teritary 4 bit opcode field
 
 Instruction formats:
 	-Register type
