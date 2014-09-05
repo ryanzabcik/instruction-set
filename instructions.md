@@ -21,8 +21,8 @@ Instruction List
 | 0x5 | sub  | B        | A        | integer sub          | Rd := Ra - imd                   | Rd := Ra - (Rb << sh)               |
 | 0x6 | slt  | B        | A        | set if less          | Rd := Ra < imd                   | Rd := Ra < (Rb << sh)               |
 | 0x7 | sltu | B        | A        | set if unsigned less | Rd := Ra < imd                   | Rd := Ra < (Rb << sh)               |
-| 0x8 | mul  | B        | A        | multiply             | (Rd,Ra) := Ra * imd              | (Rd,Ra) := Ra * Rb                  |
-| 0x9 | div  | B        | A        | divide               | Ra := Ra / Rb ; Rd := Ra % imd   | Ra := Ra / Rb ; Rd := Ra % Rb       |
+| 0x8 | mul  | B        | A        | multiply/shift left  | Rd := Ra << imd                  | (Rd,Ra) := Ra * Rb                  |
+| 0x9 | div  | B        | A        | divide/shift right   | Rd := Ra >> imd                  | Ra := Ra / Rb ; Rd := Ra % Rb       |
 | 0xa | ld   | B        | C        | load word            | Rd := mem[Rd + imd<<1]           | Rd := mem[PC + imd<<1]              |
 | 0xb | st   | B        | C        | store word           | mem[Rd + imd<<1] := Rd           | mem[PC + imd<<1] := Rd              |
 | 0xc | lea  | B        | C        | load address         | Rd := Rd + imd<<1                | Rd := PC + imd<<1                   |
@@ -52,8 +52,8 @@ Instruction Decoding
 | 0x58 | sub  | A    | 2         | 1          |            | Rd := Ra - (Rb << sh)               |
 | 0x68 | slt  | A    | 2         | 1          |            | Rd := Ra < (Rb << sh)               |
 | 0x78 | sltu | A    | 2         | 1          |            | Rd := Ra < (Rb << sh)               |
-| 0x80 | mul  | B    | 1         | 2          |            | (Rd,Ra) := Ra * imd                 |
-| 0x90 | div  | B    | 1         | 2          |            | Ra := Ra / Rb ; Rd := Ra % imd      |
+| 0x80 | shl  | B    | 1         | 1          |            | Rd := Rd << imd                     |
+| 0x90 | shr  | B    | 1         | 1          |            | Rd := Ra >> imd                     |
 | 0x88 | mul  | A    | 2         | 2          |            | (Rd,Ra) := Ra * Rb                  |
 | 0x98 | div  | A    | 2         | 2          |            | Ra := Ra / Rb ; Rd := Ra % Rb       |
 | 0xa0 | ld   | B    | 1         | 1          | r align    | Rd := mem[Rd + imd<<1]              |
