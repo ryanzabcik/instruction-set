@@ -4,5 +4,5 @@ Memory Layout
 
 Addressing Modes
 ----------------
-* Aligned word access
-* Byte access
+Aligned word access
+Byte access

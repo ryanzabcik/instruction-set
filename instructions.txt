@@ -1,0 +1,76 @@
+Instruction Format
+------------------
+
+Type A:    
+| op |f|s|c|z| rd | ra | rb |     sh     |
+|xxxx|1|x|x|x|xxxx|xxxx|xxxx|xxxxxxxxxxxx|
+
+Type B:
+| op |f|s|c|z| rd | ra | rb |        | rc |
+|x11x|0|x|x|x|xxxx|xxxx|xxxx|--------|xxxx|
+
+Type C:
+| op |f|s|c|z| rd | ra |      imm16     |
+|0xxx|0|x|x|x|xxxx|xxxx|xxxxxxxxxxxxxxxx|
+
+Type D:
+| op |f|s|c|z| rd |        imm20       |
+|1xxx|0|x|x|x|xxxx|xxxxxxxxxxxxxxxxxxxx|
+
+
+Instruction List
+----------------
+
+| Op  | Name | Type f=0 | Type f=1 | Description          | Operation f=0                         | Operation f=1                      |
+| --- | ---- | -------- | -------- | -------------------- | ------------------------------------- | ---------------------------------- |
+| 0x0 | and  | A        | C        | bitwise and          | rd := ra and (rb << sh)               | Rd := Ra and imm12                 | 
+| 0x1 | andn | A        | C        | bitwise and with not | rd := ra and not (rb << sh)           | Rd := Ra and not imm12             | 
+| 0x2 | or   | A        | C        | bitwise or           | rd := ra or (rb << sh)                | Rd := Ra or imm12                  |
+| 0x3 | xor  | A        | C        | bitwise xor          | rd := ra xor (rb << sh)               | Rd := Ra xor imm12                 |
+| 0x4 | add  | A        | C        | integer add          | rd := ra + (rb << sh)                 | Rd := Ra + imm12                   |
+| 0x5 | sub  | A        | C        | integer sub          | rd := ra - (rb << sh)                 | Rd := Ra - imm12                   |
+| 0x6 | mul  | B        |          | multiply             | (rc,rd) := ra * rb                    |                                    |
+| 0x7 | div  | B        |          | divide               | rd := ra / rb ; rc := ra % rb         |                                    |
+| 0x8 | ld   | D        | C        | load aligned word    | rd := mem[pc + imm20]                 | rd := mem[rd + imm12]              |
+| 0x9 | st   | D        | C        | store aligned word   | mem[pc + imm20] := rd                 | mem[rd + imm12] := rd              |
+| 0xa | ldb  | D        | C        | load byte            | rd := (rd << 8) or mem[pc + imm20]    | rd := (rd << 8) or mem[rd + imm12] |
+| 0xb | stb  | D        | C        | store byte           | mem[pc + imm20] := rd ; rd := rd >> 8 | mem[rd + imm12] := rd ; rd >> 8    |
+| 0xc | lea  | D        | C        | load address         | rd := pc + imm20                      | rd := ra + imm12                   |
+| 0xd | br   | D        | C        | branch               | pc := pc + imm20                      | pc := ra + imm12                   |
+| 0xe |      |          |          | undefined            |                                       |                                    |
+| 0xf |      |          |          | undefined            |                                       |                                    |
+
+
+Instruction Decoding
+--------------------
+
+| Op   | Name | Type | Reg Reads | Reg Writes | Mem Access | Operation                             |
+| ---- | ---- | ---- | --------- | ---------- | ---------- | ------------------------------------- |
+| 0x00 | and  | A    | 2         | 1          |            | rd := ra and (rb << sh)               |
+| 0x10 | andn | A    | 2         | 1          |            | rd := ra and not (rb << sh)           |
+| 0x20 | or   | A    | 2         | 1          |            | rd := ra or (rb << sh)                |
+| 0x30 | xor  | A    | 2         | 1          |            | rd := ra xor (rb << sh)               |
+| 0x40 | add  | A    | 2         | 1          |            | rd := ra + (rb << sh)                 |
+| 0x50 | sub  | A    | 2         | 1          |            | rd := ra - (rb << sh)                 |
+| 0x08 | and  | D    | 1         | 1          |            | rd := ra and imm12                    |
+| 0x18 | andn | D    | 1         | 1          |            | rd := ra and not imm12                |
+| 0x28 | or   | D    | 1         | 1          |            | rd := ra or imm12                     |
+| 0x38 | xor  | D    | 1         | 1          |            | rd := ra xor imm12                    |
+| 0x48 | add  | D    | 1         | 1          |            | rd := ra + imm12                      |
+| 0x58 | sub  | D    | 1         | 1          |            | rd := ra - imm12                      |
+| 0x60 | mul  | B    | 2         | 2          |            | (rc,rd) := ra * rb                    |
+| 0x70 | div  | B    | 2         | 2          |            | rd := ra / rb ; rc := ra % rb         |
+| 0x80 | ld   | D    | 0         | 1          | r align    | rd := mem[pc + imm20]                 |
+| 0x90 | st   | D    | 1         | 0          | w align    | mem[pc + imm20] := rd                 |
+| 0xa0 | ldb  | D    | 1         | 1          | r byte     | rd := (rd << 8) or mem[pc + imm20]    |
+| 0xb0 | stb  | D    | 1         | 1          | w byte     | mem[pc + imm20] := rd ; rd := rd >> 8 |
+| 0xc0 | lea  | D    | 0         | 1          |            | rd := pc + imm20                      |
+| 0xd0 | br   | D    | 0         | 1          |            | pc := pc + imm20                      |
+| 0x81 | ld   | C    | 1         | 0          | r align    | rd := mem[rd + imm12]                 |
+| 0x91 | st   | C    | 2         | 1          | w align    | mem[rd + imm12] := rd                 |
+| 0xa1 | ldb  | C    | 2         | 1          | r byte     | rd := (rd << 8) or mem[rd + imm12]    |
+| 0xb1 | stb  | C    | 2         | 1          | w byte     | mem[rd + imm12] := rd ; rd >> 8       |
+| 0xc1 | lea  | C    | 1         | 1          |            | rd := ra + imm12                      |
+| 0xd1 | br   | C    | 1         | 1          |            | pc := ra + imm12                      |
+
+
