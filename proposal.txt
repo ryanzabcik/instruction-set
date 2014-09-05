@@ -95,6 +95,9 @@ DIV  | rd,rs      | HI = rd / rs, LO = rd % rs
 SHL  | rd,rs      | rd = rd << rs
 SHRL | rd,rs      | rd = rd >> rs logical
 SHRA | rd,rs      | rd = rd >> rs arithmetic
+ADDI | rd,imm8    | rd = rd + imm8
+SUBI | rd,imm8    | rd = rd - imm8
+LI   | rd,imm8    | rd = imm8 with 0 extension
 
 SLT  | rd,rs      | rd = rs < 0 ? 1 : 0
 SLE  | rd,rs      | rd = rs <= 0 ? 1 : 0
@@ -109,9 +112,6 @@ BEAL | rd,imm8    | R15 = PC + 2; PC += rd == 0 ? imm8 << 1: 0,
 J    | imm12      | PC = imm12 << 1
 JR   | rd         | PC = rd
 
-LB   | rd,imm8    | rd = mem[SP + imm8] with sign extension
-LBU  | rd,imm8    | rd = mem[SP + imm8] without sign extension
-SB   | rd,imm8    | mem[SP + imm8] = rd
 LH   | rd,imm8    | rd = mem[SP + imm8 << 1]
 SH   | rd,imm8    | mem[SP + imm8 << 1] = rd
 LH   | rd,rs,imm4 | rd = mem[rs + imm4 << 1]
@@ -139,10 +139,10 @@ OP:
 0101 XOR rd,rs,rt
 0110 SH rd,rs,imm4
 0111 LH rd,rs,imm4
-1000 LB rd,imm8
-1001 LBU rd,imm8
+1000 ADDI rd,imm8
+1001 SUBI rd,imm8
 1010 LH rd,imm8
-1011 SB rd,imm8
+1011 LI rd,imm8
 1100 SH rd,imm8
 1101 BE rd,imm8
 1110 BEAL rd,imm8
