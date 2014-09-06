@@ -32,9 +32,9 @@ rt - target register (second source register)
 imm4 - signed 4 bit immediate
 imm8 - signed 8 bit immediate
 imm12 - unsigned 12 bit immediate
-op - primary 4 bit opcode field
-op2 - secondary 4 bit opcode field
-op3 - teritary 4 bit opcode field
+op - primary 4 bit opcode field (instruction bits 15 - 12)
+op2 - secondary 4 bit opcode field (instruction bits 3 - 0)
+op3 - teritary 4 bit opcode field (instruction bits 7 - 4)
 
 Instruction formats:
 	-Register type
@@ -106,10 +106,10 @@ SGE  | rd,rs      | rd = rs >= 0 ? 1 : 0
 SE   | rd,rs      | rd = rs == rd ? 1 : 0
 SNE  | rd,rs      | rd = rs != rd ? 1 : 0
 
-BE   | rd,imm8    | PC += rd == 0 ? imm8 << 1 : 0
-BEAL | rd,imm8    | R15 = PC + 2; PC += rd == 0 ? imm8 << 1: 0,
+BZ   | rd,imm8    | PC += rd == 0 ? imm8 << 1 : 0
+BZAL | rd,imm8    | R15 = PC + 2; PC += rd == 0 ? imm8 << 1: 0,
             
-J    | imm12      | PC = imm12 << 1
+J    | imm12      | PC = PC & 0xe0 & imm12 << 1
 JR   | rd         | PC = rd
 
 LH   | rd,imm8    | rd = mem[SP + imm8 << 1]
@@ -144,8 +144,8 @@ OP:
 1010 LH rd,imm8
 1011 LI rd,imm8
 1100 SH rd,imm8
-1101 BE rd,imm8
-1110 BEAL rd,imm8
+1101 BZ rd,imm8
+1110 BZAL rd,imm8
 1111 J 
 
 OP2:
@@ -196,3 +196,4 @@ MOV rd,rs <--> add rd,rs,r0
 B   imm8  <--> BE  r0, imm8 (branch always)
 BAL imm8  <--> BEAL r0, imm8
 
+ISA comments:
