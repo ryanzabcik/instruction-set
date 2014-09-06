@@ -117,7 +117,7 @@ BZAL | rd,imm8   | branch if zero and link              | R15 = PC + 2; PC += rd
 J    | imm12     | jump                                 | PC = PC & 0xE000 & imm12 << 1
 JAL  | imm12     | jump and link                        | R15 = PC + 2; PC = PC & 0xE000 & imm12 << 1
 JR   | rd        | jump register                        | PC = rd
-JALR | rd         | jump register and link              | R15 = PC + 2; PC = rd
+JALR | rd        | jump register and link              | R15 = PC + 2; PC = rd
 
 LH   | rd,imm8   | load halfword                        | rd = mem[SP + imm8 << 1]
 SH   | rd,imm8   | store halfword                       | mem[SP + imm8 << 1] = rd
@@ -174,25 +174,6 @@ OP2 table 1:
 1101 SHL   rd,rs
 1110 SHRA  rd,rs
 1111 SHRL  rd,rs
-
-OP2 table 2 (for future expansion for 2 operand instructions):
-0000 XXX
-0001 XXX
-0010 XXX
-0011 XXX
-0100 XXX
-0101 XXX
-0110 XXX
-0111 XXX
-1000 XXX
-1001 XXX
-1010 XXX
-1011 XXX
-1100 XXX
-1101 XXX
-1110 XXX
-1111 XXX
-
 
 OP3 table 1:
 0000 JR   rd 
