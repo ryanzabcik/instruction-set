@@ -11,9 +11,9 @@ Goals:
 Features:
 
 - 16 16-bit GPRs (R0 - R15)
-	-R0 is hardwired 0
-	-R14 is Stack pointer (SP)
-	-R15 is Link Register (LR) (also known as RA)
+    -R0 is hardwired 0
+    -R14 is Stack pointer (SP)
+    -R15 is Link Register (LR) (also known as RA)
 - 16-bit address space
 - 16-bit fixed length instructions 
 - Special purpose registers: 16-bit PC, 32 bit Hi/Lo pair (for mult/div results)
@@ -22,24 +22,24 @@ Features:
 - Subroutine calls through BEAL and JR
 
 Terms:
-rd 	- destination register
-rs 	- source register
-rt 	- target register (second source register)
-imm4 	- signed 4 bit immediate
-imm8 	- signed 8 bit immediate
+rd     - destination register
+rs     - source register
+rt     - target register (second source register)
+imm4     - signed 4 bit immediate
+imm8     - signed 8 bit immediate
 imm12 - unsigned 12 bit immediate
-op 	- primary 4 bit opcode field (instruction bits 15 - 12)
-op2 	- secondary 4 bit opcode field (instruction bits 3 - 0)
-op3 	- tertiary 4 bit opcode field (instruction bits 7 - 4)
-u8 	- unsigned 8 bit number
-s8 	- signed 8 bit number
-s16 	- signed 16 bit number
-u16 	- unsigned 16 bit number
+op     - primary 4 bit opcode field (instruction bits 15 - 12)
+op2     - secondary 4 bit opcode field (instruction bits 3 - 0)
+op3     - tertiary 4 bit opcode field (instruction bits 7 - 4)
+u8     - unsigned 8 bit number
+s8     - signed 8 bit number
+s16     - signed 16 bit number
+u16     - unsigned 16 bit number
 
 Instruction formats:
-	-Register type
-	-Immediate type
-	-Jump type
+    -Register type
+    -Immediate type
+    -Jump type
 
 Register Type:
 
@@ -88,51 +88,51 @@ ISA:
 
 NAME | FORMAT    | DESCRIPTION | OPERATION
 
-ADD  | rd,rs,rt  | add 									| rd = rs + rt
-SUB  | rd,rs,rt  | subtract 							| rd = rs - rt
-MULT | rd,rs     | multiply 							| HI = upper16(rd * rs), LO = lower16(rd * rs)
-DIV  | rd,rs     | divide 								| HI = rd / rs, LO = rd % rs
-SHL  | rd,rs     |shift left 							| rd = rd << rs
-SHRL | rd,rs     | shift right logical 					| rd = rd >> rs logical
-SHRA | rd,rs     | shift right arithmetic 				| rd = rd >> rs arithmetic
-ROR  | rd        | rotate right 						| rd = rd >> 1 | rd & 1 ? 0x80 : 0
-ROL  | rd        | rotate left 							| rd = rd << 1 | rd & 0x80 ? 1 : 0
-ADDI | rd,imm8   | add immediate 						| rd = rd + imm8
-LI   | rd,imm8   | load immediate 						| rd = imm8 with sign extension
+ADD  | rd,rs,rt  | add                                  | rd = rs + rt
+SUB  | rd,rs,rt  | subtract                             | rd = rs - rt
+MULT | rd,rs     | multiply                             | HI = upper16(rd * rs), LO = lower16(rd * rs)
+DIV  | rd,rs     | divide                               | HI = rd / rs, LO = rd % rs
+SHL  | rd,rs     |shift left                            | rd = rd << rs
+SHRL | rd,rs     | shift right logical                  | rd = rd >> rs logical
+SHRA | rd,rs     | shift right arithmetic               | rd = rd >> rs arithmetic
+ROR  | rd        | rotate right                         | rd = rd >> 1 | rd & 1 ? 0x80 : 0
+ROL  | rd        | rotate left                          | rd = rd << 1 | rd & 0x80 ? 1 : 0
+ADDI | rd,imm8   | add immediate                        | rd = rd + imm8
+LI   | rd,imm8   | load immediate                       | rd = imm8 with sign extension
 
-SLT  | rd,rs     | set on less than 					| rd = rs < 0 ? 1 : 0
-SLTU | rd,rs     | set on less than unsigned 			| rd = (u16) rs < 0 ? 1 : 0
-SLE  | rd,rs     | set on less than or equal			| rd = rs <= 0 ? 1 : 0
-SLEU | rd,rs     | set on less than or equal unsigned 	| rd = (u16) rs <= 0 ? 1 : 0
-SGT  | rd,rs     | set on greater than 					| rd = rs > 0 ? 1 : 0
-SGTU | rd,rs     | set on greater than unsigned 		| rd = (u16) rs > 0 ? 1 : 0
-SGE  | rd,rs     | set on greater than or equal 		| rd = rs >= 0 ? 1 : 0
+SLT  | rd,rs     | set on less than                     | rd = rs < 0 ? 1 : 0
+SLTU | rd,rs     | set on less than unsigned            | rd = (u16) rs < 0 ? 1 : 0
+SLE  | rd,rs     | set on less than or equal            | rd = rs <= 0 ? 1 : 0
+SLEU | rd,rs     | set on less than or equal unsigned   | rd = (u16) rs <= 0 ? 1 : 0
+SGT  | rd,rs     | set on greater than                  | rd = rs > 0 ? 1 : 0
+SGTU | rd,rs     | set on greater than unsigned         | rd = (u16) rs > 0 ? 1 : 0
+SGE  | rd,rs     | set on greater than or equal         | rd = rs >= 0 ? 1 : 0
 SGEU | rd,rs     | set on greater than or equal unsigned| rd = (u16) rs >= 0 ? 1 : 0
-SE   | rd,rs     | set on equal 						| rd = rs == rd ? 1 : 0
-SNE  | rd,rs     | set on not equal 					| rd = rs != rd ? 1 : 0
+SE   | rd,rs     | set on equal                         | rd = rs == rd ? 1 : 0
+SNE  | rd,rs     | set on not equal                     | rd = rs != rd ? 1 : 0
 
-BZ   | rd,imm8   | branch if zero 						| PC += rd == 0 ? imm8 << 1 : 0
-BZAL | rd,imm8   | branch if zero and link 				| R15 = PC + 2; PC += rd == 0 ? imm8 << 1: 0,
+BZ   | rd,imm8   | branch if zero                       | PC += rd == 0 ? imm8 << 1 : 0
+BZAL | rd,imm8   | branch if zero and link              | R15 = PC + 2; PC += rd == 0 ? imm8 << 1: 0,
             
-J    | imm12     | jump 								| PC = PC & 0xE000 & imm12 << 1
-JAL  | imm12     | jump and link						| R15 = PC + 2; PC = PC & 0xE000 & imm12 << 1
-JR   | rd        | jump register 						| PC = rd
-JALR | rd		 | jump register and link				| R15 = PC + 2; PC = rd
+J    | imm12     | jump                                 | PC = PC & 0xE000 & imm12 << 1
+JAL  | imm12     | jump and link                        | R15 = PC + 2; PC = PC & 0xE000 & imm12 << 1
+JR   | rd        | jump register                        | PC = rd
+JALR | rd         | jump register and link              | R15 = PC + 2; PC = rd
 
-LH   | rd,imm8   | load halfword 						| rd = mem[SP + imm8 << 1]
-SH   | rd,imm8   | store halfword 						| mem[SP + imm8 << 1] = rd
-LH   | rd,rs,imm4| load halfword 						| rd = mem[rs + imm4 << 1]
-SH   | rd,rs,imm4| store halfword 						| mem[rs + imm4 << 1] = rd
+LH   | rd,imm8   | load halfword                        | rd = mem[SP + imm8 << 1]
+SH   | rd,imm8   | store halfword                       | mem[SP + imm8 << 1] = rd
+LH   | rd,rs,imm4| load halfword                        | rd = mem[rs + imm4 << 1]
+SH   | rd,rs,imm4| store halfword                       | mem[rs + imm4 << 1] = rd
 
-MFHI | rd        | move from hi 						| rd = HI
-MFLO | rd        | move from lo 						| rd = LO
-MTHI | rd        | move to hi 							| HI = rd
-MTLO | rd        | move to lo 							| LO = rd
+MFHI | rd        | move from hi                         | rd = HI
+MFLO | rd        | move from lo                         | rd = LO
+MTHI | rd        | move to hi                           | HI = rd
+MTLO | rd        | move to lo                           | LO = rd
 
-OR   | rd,rs,rt  | bitwise or  							| rd = rs | rt
-XOR  | rd,rs,rt  | bitwise exclusive or 				| rd = rs ^ rt
-AND  | rd,rs,rt  | bitwise and 							| rd = rs & rt
-NOT  | rd,rs     | bitwise not 							| rd = ~rs
+OR   | rd,rs,rt  | bitwise or                           | rd = rs | rt
+XOR  | rd,rs,rt  | bitwise exclusive or                 | rd = rs ^ rt
+AND  | rd,rs,rt  | bitwise and                          | rd = rs & rt
+NOT  | rd,rs     | bitwise not                          | rd = ~rs
 
 XXX  |           | no operation / invalid opcode / room for expansion
 
