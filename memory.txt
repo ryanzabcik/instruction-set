@@ -1,7 +1,7 @@
 Memory Layout
 ----------
-16bit Little-Endian
+16bit
 
 Addressing Modes
 ----------------
-Word-Addressable Only
+Word-Addressable
