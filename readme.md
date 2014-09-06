@@ -50,7 +50,7 @@
       01 - left shift 1 bit
       10 - logical right shift 1 bit
       11 - arithmetic right shift 1 bit
-    imm5 - sign extended 5 bit immediate or 4 bit shift with logic/arithmetic bit
+    imm5 - sign extended 5 bit immediate or 4 bit shift with arith/logic bit
     imm8 - sign extended 8 bit immediate
     
 
@@ -68,7 +68,8 @@
     mul - multiply
     div - divide
     shl - shift left
-    shr - shift right
+    shrl - shift right logical
+    shra - shift right arithmetic
     
     ld - load
     st - store
