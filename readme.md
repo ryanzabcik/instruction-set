@@ -6,10 +6,10 @@ choose to accept
 [Chris's original proposal](https://github.com/CS350C-Fall-2014/instruction-set/tree/c32/)
 unchanged, that is sufficient to finish the assignment.
  
-However, there were many valid points brought up in discussion today
-that you should consider. Ti organize this discussion so that you can
-have a final proposal which is a reasonable substrate for future
-projects.
+However, there were many valid points brought up in discussion on
+Thursday that you should consider. To organize this discussion so that
+you can have a final proposal which is a reasonable substrate for
+future projects.
 
 [Piazza Link](https://piazza.com/class/hzbug9l443uam)
 
