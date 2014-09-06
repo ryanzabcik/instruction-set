@@ -1,14 +1,12 @@
 16^3 (Sixteen Cubed)
 
 Goals:
-	- Easy to decode
-	- Easy to implement
-	- nothing exotic
-	- avoid implicit registers (only used in branch and link 
-instructions and load/store)
-	- plenty of instruction space for expansion
-	- 3/2/1 operand instructions (with room for 0 operand 
-instructions)
+- Easy to decode
+- Easy to implement
+- nothing exotic
+- avoid implicit registers (only used in branch and link instructions and load/store)
+- plenty of instruction space for expansion
+- 3/2/1 operand instructions (with room for 0 operand instructions)
 
 Features:
 
@@ -18,23 +16,25 @@ Features:
 	-R15 is Link Register (LR) (also known as RA)
 - 16-bit address space
 - 16-bit fixed length instructions 
-- Special purpose registers: 16-bit PC, 32 bit Hi/Lo pair (for mult/div 
-results)
+- Special purpose registers: 16-bit PC, 32 bit Hi/Lo pair (for mult/div results)
 - PC relative loads (rd,imm8 type)
-// NOTE: this may be more useful as stack pointer relative loads
 - Register  relative loads(rd,rs,imm4 type)
 - Subroutine calls through BEAL and JR
 
 Terms:
-rd - destination reigster
-rs - source register
-rt - target register (second source register)
-imm4 - signed 4 bit immediate
-imm8 - signed 8 bit immediate
+rd 	- destination register
+rs 	- source register
+rt 	- target register (second source register)
+imm4 	- signed 4 bit immediate
+imm8 	- signed 8 bit immediate
 imm12 - unsigned 12 bit immediate
-op - primary 4 bit opcode field (instruction bits 15 - 12)
-op2 - secondary 4 bit opcode field (instruction bits 3 - 0)
-op3 - teritary 4 bit opcode field (instruction bits 7 - 4)
+op 	- primary 4 bit opcode field (instruction bits 15 - 12)
+op2 	- secondary 4 bit opcode field (instruction bits 3 - 0)
+op3 	- tertiary 4 bit opcode field (instruction bits 7 - 4)
+u8 	- unsigned 8 bit number
+s8 	- signed 8 bit number
+s16 	- signed 16 bit number
+u16 	- unsigned 16 bit number
 
 Instruction formats:
 	-Register type
@@ -86,95 +86,123 @@ Jump Type:
 ISA:
 ---
 
-NAME | FORMAT     | OPERATION
+NAME | FORMAT    | DESCRIPTION | OPERATION
 
-ADD  | rd,rs,rt   | rd = rs + rt
-SUB  | rd,rs,rt   | rd = rs - rt
-MULT | rd,rs      | HI =  upper16 (rd * rs), LO = lower16(rd, rs)
-DIV  | rd,rs      | HI = rd / rs, LO = rd % rs
-SHL  | rd,rs      | rd = rd << rs
-SHRL | rd,rs      | rd = rd >> rs logical
-SHRA | rd,rs      | rd = rd >> rs arithmetic
-ADDI | rd,imm8    | rd = rd + imm8
-SUBI | rd,imm8    | rd = rd - imm8
-LI   | rd,imm8    | rd = imm8 with sign extension
+ADD  | rd,rs,rt  | add 									| rd = rs + rt
+SUB  | rd,rs,rt  | subtract 							| rd = rs - rt
+MULT | rd,rs     | multiply 							| HI = upper16(rd * rs), LO = lower16(rd * rs)
+DIV  | rd,rs     | divide 								| HI = rd / rs, LO = rd % rs
+SHL  | rd,rs     |shift left 							| rd = rd << rs
+SHRL | rd,rs     | shift right logical 					| rd = rd >> rs logical
+SHRA | rd,rs     | shift right arithmetic 				| rd = rd >> rs arithmetic
+ROR  | rd        | rotate right 						| rd = rd >> 1 | rd & 1 ? 0x80 : 0
+ROL  | rd        | rotate left 							| rd = rd << 1 | rd & 0x80 ? 1 : 0
+ADDI | rd,imm8   | add immediate 						| rd = rd + imm8
+LI   | rd,imm8   | load immediate 						| rd = imm8 with sign extension
 
-SLT  | rd,rs      | rd = rs < 0 ? 1 : 0
-SLE  | rd,rs      | rd = rs <= 0 ? 1 : 0
-SGT  | rd,rs      | rd = rs > 0 ? 1 : 0
-SGE  | rd,rs      | rd = rs >= 0 ? 1 : 0
-SE   | rd,rs      | rd = rs == rd ? 1 : 0
-SNE  | rd,rs      | rd = rs != rd ? 1 : 0
+SLT  | rd,rs     | set on less than 					| rd = rs < 0 ? 1 : 0
+SLTU | rd,rs     | set on less than unsigned 			| rd = (u16) rs < 0 ? 1 : 0
+SLE  | rd,rs     | set on less than or equal			| rd = rs <= 0 ? 1 : 0
+SLEU | rd,rs     | set on less than or equal unsigned 	| rd = (u16) rs <= 0 ? 1 : 0
+SGT  | rd,rs     | set on greater than 					| rd = rs > 0 ? 1 : 0
+SGTU | rd,rs     | set on greater than unsigned 		| rd = (u16) rs > 0 ? 1 : 0
+SGE  | rd,rs     | set on greater than or equal 		| rd = rs >= 0 ? 1 : 0
+SGEU | rd,rs     | set on greater than or equal unsigned| rd = (u16) rs >= 0 ? 1 : 0
+SE   | rd,rs     | set on equal 						| rd = rs == rd ? 1 : 0
+SNE  | rd,rs     | set on not equal 					| rd = rs != rd ? 1 : 0
 
-BZ   | rd,imm8    | PC += rd == 0 ? imm8 << 1 : 0
-BZAL | rd,imm8    | R15 = PC + 2; PC += rd == 0 ? imm8 << 1: 0,
+BZ   | rd,imm8   | branch if zero 						| PC += rd == 0 ? imm8 << 1 : 0
+BZAL | rd,imm8   | branch if zero and link 				| R15 = PC + 2; PC += rd == 0 ? imm8 << 1: 0,
             
-J    | imm12      | PC = PC & 0xe0 & imm12 << 1
-JR   | rd         | PC = rd
+J    | imm12     | jump 								| PC = PC & 0xE000 & imm12 << 1
+JAL  | imm12     | jump and link						| R15 = PC + 2; PC = PC & 0xE000 & imm12 << 1
+JR   | rd        | jump register 						| PC = rd
+JALR | rd		 | jump register and link				| R15 = PC + 2; PC = rd
 
-LH   | rd,imm8    | rd = mem[SP + imm8 << 1]
-SH   | rd,imm8    | mem[SP + imm8 << 1] = rd
-LH   | rd,rs,imm4 | rd = mem[rs + imm4 << 1]
-SH   | rd,rs,imm4 | mem[rs + imm4 << 1] = rd
+LH   | rd,imm8   | load halfword 						| rd = mem[SP + imm8 << 1]
+SH   | rd,imm8   | store halfword 						| mem[SP + imm8 << 1] = rd
+LH   | rd,rs,imm4| load halfword 						| rd = mem[rs + imm4 << 1]
+SH   | rd,rs,imm4| store halfword 						| mem[rs + imm4 << 1] = rd
 
-MFHI | rd         | rd = HI
-MFLO | rd         | rd = LO
-MTHI | rd         | HI = rd
-MTLO | rd         | LO = rd
+MFHI | rd        | move from hi 						| rd = HI
+MFLO | rd        | move from lo 						| rd = LO
+MTHI | rd        | move to hi 							| HI = rd
+MTLO | rd        | move to lo 							| LO = rd
 
-OR   | rd,rs,rt   | rd = rs | rt
-XOR  | rd,rs,rt   | rd = rs ^ rt
-AND  | rd,rs,rt   | rd = rs & rt
-NOT  | rd,rs      | rd = ~rs
+OR   | rd,rs,rt  | bitwise or  							| rd = rs | rt
+XOR  | rd,rs,rt  | bitwise exclusive or 				| rd = rs ^ rt
+AND  | rd,rs,rt  | bitwise and 							| rd = rs & rt
+NOT  | rd,rs     | bitwise not 							| rd = ~rs
+
+XXX  |           | no operation / invalid opcode / room for expansion
 
 Decode Tables:
 
-OP:
+OP table:
 
-0000 OP2 TABLE OPCODE
-0001 ADD rd,rs,rt
-0010 SUB rd,rs,rt 
-0011 AND rd,rs,rt
-0100 OR rd,rs,rt
-0101 XOR rd,rs,rt
-0110 SH rd,rs,imm4
-0111 LH rd,rs,imm4
-1000 ADDI rd,imm8
-1001 SUBI rd,imm8
-1010 LH rd,imm8
-1011 LI rd,imm8
-1100 SH rd,imm8
-1101 BZ rd,imm8
+0000 OP2 table1 lookup
+0001 ADD  rd,rs,rt
+0010 SUB  rd,rs,rt 
+0011 AND  rd,rs,rt
+0100 OR   rd,rs,rt
+0101 XOR  rd,rs,rt
+0110 SH   rd,rs,imm4
+0111 LH   rd,rs,imm4
+1000 JAL  imm12
+1001 ADDI rd, imm8
+1010 LH   rd,imm8
+1011 LI   rd,imm8
+1100 SH   rd,imm8
+1101 BZ   rd,imm8
 1110 BZAL rd,imm8
-1111 J 
+1111 J    imm12
 
-OP2:
-0000 OP3 TABLE LOOKUP
-0001 MULT rd,rs
-0010 DIV  rd,rs
-0011 SLT  rd,rs
-0100 SLE  rd,rs
-0101 SGT  rd,rs
-0110 SGE  rd,rs
-0111 SE   rd,rs
-1000 SNE  rd,rs
-1001 NOT  rd,rs
-1010 SHL  rd,rs
-1011 SHRL rd,rs
-1100 SHRA rd,rs
-1101
-1110
-1111
+OP2 table 1:
+0000 OP3 table1 lookup
+0001 MULT  rd,rs
+0010 DIV   rd,rs
+0011 SLT   rd,rs
+0100 SLTU  rd,rs
+0101 SLE   rd,rs
+0110 SLEU  rd,rs
+0111 SGT   rd,rs
+1000 SGTU  rd,rs
+1001 SGE   rd,rs
+1010 SGEU  rd,rs
+1011 SE    rd,rs
+1100 SNE   rd,rs
+1101 SHL   rd,rs
+1110 SHRA  rd,rs
+1111 SHRL  rd,rs
 
-OP3:
+OP2 table 2 (for future expansion for 2 operand instructions):
+0000 XXX
+0001 XXX
+0010 XXX
+0011 XXX
+0100 XXX
+0101 XXX
+0110 XXX
+0111 XXX
+1000 XXX
+1001 XXX
+1010 XXX
+1011 XXX
+1100 XXX
+1101 XXX
+1110 XXX
+1111 XXX
+
+
+OP3 table 1:
 0000 JR   rd 
 0001 MFHI rd
 0010 MTHI rd
 0011 MFLO rd
 0100 MTLO rd
-0101 
-0110
-0111
+0101 ROR  rd
+0110 ROL  rd
+0111 JALR rd
 1000
 1001
 1010
