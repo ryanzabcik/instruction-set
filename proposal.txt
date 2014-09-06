@@ -102,7 +102,7 @@ LI   | rd,imm8    | rd = imm8 with sign extension
 SLT  | rd,rs      | rd = rs < 0 ? 1 : 0
 SLE  | rd,rs      | rd = rs <= 0 ? 1 : 0
 SGT  | rd,rs      | rd = rs > 0 ? 1 : 0
-SGE  | rd,rs      | rd = rs >- 0 ? 1 : 0
+SGE  | rd,rs      | rd = rs >= 0 ? 1 : 0
 SE   | rd,rs      | rd = rs == rd ? 1 : 0
 SNE  | rd,rs      | rd = rs != rd ? 1 : 0
 
