@@ -89,7 +89,7 @@ ISA:
 NAME | FORMAT     | OPERATION
 
 ADD  | rd,rs,rt   | rd = rs + rt
-SUB  | rd,rs,rt   | rd = rs - sr
+SUB  | rd,rs,rt   | rd = rs - rt
 MULT | rd,rs      | HI =  upper16 (rd * rs), LO = lower16(rd, rs)
 DIV  | rd,rs      | HI = rd / rs, LO = rd % rs
 SHL  | rd,rs      | rd = rd << rs
@@ -193,7 +193,7 @@ Return value in R1
 
 Pseudo instructions:
 MOV rd,rs <--> add rd,rs,r0
-B   imm8  <--> BE  r0, imm8 (branch always)
-BAL imm8  <--> BEAL r0, imm8
+B   imm8  <--> BZ  r0, imm8 (branch always)
+BAL imm8  <--> BZAL r0, imm8
 
 ISA comments:
