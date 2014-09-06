@@ -105,6 +105,7 @@ Here is an EABI similar to ARM's:
  * R0-R3 used to pass arguments
  * R0 used to pass pointer to argument list if there are more than 4
  * R4,R5 must be saved by the callee
+ * R0 used for return value
 
 ##### How many register file read/write ports?
 For most instructions there are maximum 2 register reads and 1 register write.
