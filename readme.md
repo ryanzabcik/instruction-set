@@ -13,8 +13,8 @@
  - Word addressable memory
  - Lack of predicates or condition flags
  - MIPS-like conditions
- - Arithmetic instructions with shifts
- - Arithmetic instructions with Immediates
+ - Arithmetic instructions with 3 registers
+ - Arithmetic instructions with immediates
  - Register relative addressing and branching
  - PC relative addressing and branching
 
@@ -29,27 +29,22 @@
 ## Instruction Encoding
 
     Type A:
-    | op |f| rd| ra| rb|sh|
-    |xxxx|x|xxx|xxx|xxx|xx|
+    | op |f| rd| ra|  | rb|
+    |xxxx|1|xxx|xxx|00|xxx|
     
     Type B:
     | op |f| rd| ra| imm5|
-    |xxxx|x|xxx|xxx|xxxxx|
+    |xxxx|0|xxx|xxx|xxxxx|
     
     Type C:
     | op |f| rd|  imm8  |
-    |xxxx|x|xxx|xxxxxxxx|
+    |xxxx|1|xxx|xxxxxxxx|
     
     op - 4 bit opcode encodes 16 general opcodes
     f - format bit indicates format of instruction
     rd - destination register
     ra - register a
     rb - register b
-    sh - 2 bit shift encoding
-      00 - no shift
-      01 - left shift 1 bit
-      10 - logical right shift 1 bit
-      11 - arithmetic right shift 1 bit
     imm5 - sign extended 5 bit immediate or 4 bit shift with arith/logic bit
     imm8 - sign extended 8 bit immediate
     
@@ -119,8 +114,8 @@ As a word-addressable load/store architecture, there is just 1 exclusive,
 word-sized, read/write port. Aside from fetches, only ld and st can access memory.
 
 ##### How do we implement arrays / structures / pointers / function pointers?
- * Arrays can be accessed using add with builtin shifts to find 8bit, 16bit, 
-   and 32bit addresses in arrays, followed by a ld from register.
+ * Arrays of words are trivially accessed by an add followed by a load from 
+   register. Different sizes can use the shift instruction to determine size.
  * Structs can be accessed using the ld from register with imm5 offset. 
  * Pointers can be implemented with the register based load instructions
  * Function pointers can be implemented with the register based call intructions
