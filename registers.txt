@@ -10,7 +10,7 @@ Register Layout
 | R4       | R4   | 16   | rw     | general         |
 | R5       | R5   | 16   | rw     | general         |
 | R6       | R6   | 16   | rw     | general         |
-| R7       | N    | 16   | r      | constant (-1)   |
+| R7       | Z    | 16   | r      | constant (0)    |
 |          | PC   | 16   |        | program counter |
 
 
