@@ -28,7 +28,7 @@ Instruction List
 | 0x6 | slt     | B        | A        | set if less          | rd := ra < imm5                  | rd := ra < (rb << sh)               |
 | 0x7 | sltu    | B        | A        | set if unsigned less | rd := ra < imm5                  | rd := ra < (rb << sh)               |
 | 0x8 | mul/shl | B        | A        | multiply/shift left  | rd := ra << imm4                 | (rd,ra) := ra * rb                  |
-| 0x9 | div/shr | B        | A        | divide/shift right   | rd := ra >> imm4 (arith/logic)   | ra := ra / rb ; rd := ra % rb       |
+| 0x9 | div/shr | B        | A        | divide/shift right   | rd := ra >> imm4 (logic/arith)   | ra := ra / rb ; rd := ra % rb       |
 | 0xa | ld      | B        | C        | load word            | rd := mem[ra + imm5]             | rd := mem[pc + imm8]                |
 | 0xb | st      | B        | C        | store word           | mem[ra + imm5] := rd             | mem[pc + imm8] := rd                |
 | 0xc | lea     | B        | C        | load address         | rd := ra + imm5                  | rd := pc + imm8                     |
@@ -40,44 +40,72 @@ Instruction List
 Instruction Decoding
 --------------------
 
-| Op   | Assembly          | Type | Reg Reads | Reg Writes | Mem Access | Operation                           |
-| ---- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
-| 0x00 | or ra,imm5,rd     | B    | 1         | 1          |            | rd := ra or imm5                    |
-| 0x10 | xor ra,imm5,rd    | B    | 1         | 1          |            | rd := ra xor imm5                   |
-| 0x20 | and ra,imm5,rd    | B    | 1         | 1          |            | rd := ra and imm5                   |
-| 0x30 | andn ra,imm5,rd   | B    | 1         | 1          |            | rd := ra and not imm5               |
-| 0x40 | add ra,imm5,rd    | B    | 1         | 1          |            | rd := ra + imm5                     |
-| 0x50 | sub ra,imm5,rd    | B    | 1         | 1          |            | rd := ra - imm5                     |
-| 0x60 | slt ra,imm5,rd    | B    | 1         | 1          |            | rd := ra < imm5                     |
-| 0x70 | sltu ra,imm5,rd   | B    | 1         | 1          |            | rd := ra < imm5                     |
-| ---- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
-| 0x08 | or ra,rb,rd       | A    | 2         | 1          |            | rd := ra or (rb << sh)              |
-| 0x18 | xor ra,rb,rd      | A    | 2         | 1          |            | rd := ra xor (rb << sh)             |
-| 0x28 | and ra,rb,rd      | A    | 2         | 1          |            | rd := ra and (rb << sh)             |
-| 0x38 | andn ra,rb,rd     | A    | 2         | 1          |            | rd := ra and not (rb << sh)         |
-| 0x48 | add ra,rb,rd      | A    | 2         | 1          |            | rd := ra + (rb << sh)               |
-| 0x58 | sub ra,rb,rd      | A    | 2         | 1          |            | rd := ra - (rb << sh)               |
-| 0x68 | slt ra,rb,rd      | A    | 2         | 1          |            | rd := ra < (rb << sh)               |
-| 0x78 | sltu ra,rb,rd     | A    | 2         | 1          |            | rd := ra < (rb << sh)               |
-| ---- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
-| 0x80 | shl ra,imm4,rd    | B    | 1         | 1          |            | rd := ra << imm4                    |
-| 0x90 | shra ra,imm4,rd   | B    | 1         | 1          |            | rd := ra >> imm4 (arithmetic)       |
-| 0x91 | shrl ra,imm4,rd   | B    | 1         | 1          |            | rd := ra >> imm4 (logical)          |
-| 0x88 | mul ra,rd,rc      | A    | 2         | 2          |            | (rd,ra) := ra * rb                  |
-| 0x98 | div ra,rd,rc      | A    | 2         | 2          |            | ra := ra / rb ; rd := ra % rb       |
-| ---- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
-| 0xa0 | ld ra+imm5,rd     | B    | 1         | 1          | r align    | rd := mem[ra + imm5]                |
-| 0xb0 | st ra+imm5,rd     | B    | 2         | 0          | w align    | mem[ra + imm5] := rd                |
-| 0xc0 | lea ra+imm5,rd    | B    | 2         | 1          |            | rd := ra + imm5                     |
-| 0xd0 | call ra+imm5,rd   | B    | 1         | 1          |            | rd := pc+1 ; pc := ra + imm5        |
-| 0xe0 | breq rd,ra+imm5   | B    | 1         | 0          |            | pc := ra + imm5 if rd == 0          |
-| 0xf0 | brne rd,ra+imm5   | B    | 1         | 0          |            | pc := ra + imm5 if rd != 0          |
-| ---- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
-| 0xa8 | ld imm8,rd        | C    | 0         | 1          | r align    | rd := mem[pc + imm8]                |
-| 0xb8 | st imm8,rd        | C    | 1         | 0          | w align    | mem[pc + imm8] := rd                |
-| 0xc8 | lea imm8,rd       | C    | 1         | 1          |            | rd := pc + imm8                     |
-| 0xd8 | call imm8,rd      | C    | 0         | 1          |            | rd := pc+1 ; pc := pc + imm8        |
-| 0xe8 | breq rd,imm8      | C    | 1         | 0          |            | pc := pc + imm8 if rd == 0          |
-| 0xf8 | brne rd,imm8      | C    | 1         | 0          |            | pc := pc + imm8 if rd != 0          |
+| Op   | Sh  | Assembly          | Type | Reg Reads | Reg Writes | Mem Access | Operation                           |
+| ---- | --- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
+| 0x00 |     | or ra,imm5,rd     | B    | 1         | 1          |            | rd := ra or imm5                    |
+| 0x10 |     | xor ra,imm5,rd    | B    | 1         | 1          |            | rd := ra xor imm5                   |
+| 0x20 |     | and ra,imm5,rd    | B    | 1         | 1          |            | rd := ra and imm5                   |
+| 0x30 |     | andn ra,imm5,rd   | B    | 1         | 1          |            | rd := ra and not imm5               |
+| 0x40 |     | add ra,imm5,rd    | B    | 1         | 1          |            | rd := ra + imm5                     |
+| 0x50 |     | sub ra,imm5,rd    | B    | 1         | 1          |            | rd := ra - imm5                     |
+| 0x60 |     | slt ra,imm5,rd    | B    | 1         | 1          |            | rd := ra < imm5                     |
+| 0x70 |     | sltu ra,imm5,rd   | B    | 1         | 1          |            | rd := ra < imm5 (unsigned)          |
+| ---- | --- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
+| 0x08 | 0x0 | or ra,rb,rd       | A    | 2         | 1          |            | rd := ra or rb                      |
+| 0x18 | 0x0 | xor ra,rb,rd      | A    | 2         | 1          |            | rd := ra xor rb                     |
+| 0x28 | 0x0 | and ra,rb,rd      | A    | 2         | 1          |            | rd := ra and rb                     |
+| 0x38 | 0x0 | andn ra,rb,rd     | A    | 2         | 1          |            | rd := ra and not rb                 |
+| 0x48 | 0x0 | add ra,rb,rd      | A    | 2         | 1          |            | rd := ra + rb                       |
+| 0x58 | 0x0 | sub ra,rb,rd      | A    | 2         | 1          |            | rd := ra - rb                       |
+| 0x68 | 0x0 | slt ra,rb,rd      | A    | 2         | 1          |            | rd := ra < rb                       |
+| 0x78 | 0x0 | sltu ra,rb,rd     | A    | 2         | 1          |            | rd := ra < rb (unsigned)            |
+| ---- | --- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
+| 0x08 | 0x1 | or ra,rb<<1,rd    | A    | 2         | 1          |            | rd := ra or (rb << 1)               |
+| 0x18 | 0x1 | xor ra,rb<<1,rd   | A    | 2         | 1          |            | rd := ra xor (rb << 1)              |
+| 0x28 | 0x1 | and ra,rb<<1,rd   | A    | 2         | 1          |            | rd := ra and (rb << 1)              |
+| 0x38 | 0x1 | andn ra,rb<<1,rd  | A    | 2         | 1          |            | rd := ra and not (rb << 1)          |
+| 0x48 | 0x1 | add ra,rb<<1,rd   | A    | 2         | 1          |            | rd := ra + (rb << 1)                |
+| 0x58 | 0x1 | sub ra,rb<<1,rd   | A    | 2         | 1          |            | rd := ra - (rb << 1)                |
+| 0x68 | 0x1 | slt ra,rb<<1,rd   | A    | 2         | 1          |            | rd := ra < (rb << 1)                |
+| 0x78 | 0x1 | sltu ra,rb<<1,rd  | A    | 2         | 1          |            | rd := ra < (rb << 1) (unsigned)     |
+| ---- | --- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
+| 0x08 | 0x2 | or ra,rb>>>1,rd   | A    | 2         | 1          |            | rd := ra or (rb >>> 1)              |
+| 0x18 | 0x2 | xor ra,rb>>>1,rd  | A    | 2         | 1          |            | rd := ra xor (rb >>> 1)             |
+| 0x28 | 0x2 | and ra,rb>>>1,rd  | A    | 2         | 1          |            | rd := ra and (rb >>> 1)             |
+| 0x38 | 0x2 | andn ra,rb>>>1,rd | A    | 2         | 1          |            | rd := ra and not (rb >>> 1)         |
+| 0x48 | 0x2 | add ra,rb>>>1,rd  | A    | 2         | 1          |            | rd := ra + (rb >>> 1)               |
+| 0x58 | 0x2 | sub ra,rb>>>1,rd  | A    | 2         | 1          |            | rd := ra - (rb >>> 1)               |
+| 0x68 | 0x2 | slt ra,rb>>>1,rd  | A    | 2         | 1          |            | rd := ra < (rb >>> 1)               |
+| 0x78 | 0x2 | sltu ra,rb>>>1,rd | A    | 2         | 1          |            | rd := ra < (rb >>> 1) (unsigned)    |
+| ---- | --- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
+| 0x08 | 0x3 | or ra,rb>>1,rd    | A    | 2         | 1          |            | rd := ra or (rb >> 1)               |
+| 0x18 | 0x3 | xor ra,rb>>1,rd   | A    | 2         | 1          |            | rd := ra xor (rb >> 1)              |
+| 0x28 | 0x3 | and ra,rb>>1,rd   | A    | 2         | 1          |            | rd := ra and (rb >> 1)              |
+| 0x38 | 0x3 | andn ra,rb>>1,rd  | A    | 2         | 1          |            | rd := ra and not (rb >> 1)          |
+| 0x48 | 0x3 | add ra,rb>>1,rd   | A    | 2         | 1          |            | rd := ra + (rb >> 1)                |
+| 0x58 | 0x3 | sub ra,rb>>1,rd   | A    | 2         | 1          |            | rd := ra - (rb >> 1)                |
+| 0x68 | 0x3 | slt ra,rb>>1,rd   | A    | 2         | 1          |            | rd := ra < (rb >> 1)                |
+| 0x78 | 0x3 | sltu ra,rb>>1,rd  | A    | 2         | 1          |            | rd := ra < (rb >> 1) (unsigned)     |
+| ---- | --- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
+| 0x80 |     | shl ra,imm4,rd    | B    | 1         | 1          |            | rd := ra << imm4                    |
+| 0x90 | 0b0 | shrl ra,imm4,rd   | B    | 1         | 1          |            | rd := ra >>> imm4                   |
+| 0x90 | 0b1 | shra ra,imm4,rd   | B    | 1         | 1          |            | rd := ra >> imm4                    |
+| ---- | --- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
+| 0x88 |     | mul ra,rd,rc      | A    | 2         | 2          |            | (rd,ra) := ra * rb                  |
+| 0x98 |     | div ra,rd,rc      | A    | 2         | 2          |            | ra := ra / rb ; rd := ra % rb       |
+| ---- | --- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
+| 0xa0 |     | ld ra+imm5,rd     | B    | 1         | 1          | r align    | rd := mem[ra + imm5]                |
+| 0xb0 |     | st ra+imm5,rd     | B    | 2         | 0          | w align    | mem[ra + imm5] := rd                |
+| 0xc0 |     | lea ra+imm5,rd    | B    | 2         | 1          |            | rd := ra + imm5                     |
+| 0xd0 |     | call ra+imm5,rd   | B    | 1         | 1          |            | rd := pc+1 ; pc := ra + imm5        |
+| 0xe0 |     | breq rd,ra+imm5   | B    | 1         | 0          |            | pc := ra + imm5 if rd == 0          |
+| 0xf0 |     | brne rd,ra+imm5   | B    | 1         | 0          |            | pc := ra + imm5 if rd != 0          |
+| ---- | --- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
+| 0xa8 |     | ld imm8,rd        | C    | 0         | 1          | r align    | rd := mem[pc + imm8]                |
+| 0xb8 |     | st imm8,rd        | C    | 1         | 0          | w align    | mem[pc + imm8] := rd                |
+| 0xc8 |     | lea imm8,rd       | C    | 1         | 1          |            | rd := pc + imm8                     |
+| 0xd8 |     | call imm8,rd      | C    | 0         | 1          |            | rd := pc+1 ; pc := pc + imm8        |
+| 0xe8 |     | breq rd,imm8      | C    | 1         | 0          |            | pc := pc + imm8 if rd == 0          |
+| 0xf8 |     | brne rd,imm8      | C    | 1         | 0          |            | pc := pc + imm8 if rd != 0          |
 
 
