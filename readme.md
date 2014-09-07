@@ -101,11 +101,12 @@ The call opcode stores the return address in a specified register and there is
 no special stack register, so function calls are defined entirely by convention. 
 
 Here is an EABI similar to ARM's:
- * Store return address in R6
+ * R6 contains the stack pointer
+ * R5 used to store return address
  * R0-R3 used to pass arguments
  * R0 used to pass pointer to argument list if there are more than 4
- * R4,R5 must be saved by the callee
  * R0 used for return value
+ * R4 must be saved by the callee
 
 ##### How many register file read/write ports?
 For most instructions there are maximum 2 register reads and 1 register write.
