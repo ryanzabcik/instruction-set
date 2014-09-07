@@ -22,7 +22,7 @@
 ## Registers
 
     R0-R6 - general purpose registers
-    N - constant -1 register
+    Z - constant 0 register
     PC - unaddressable program counter
 
 
@@ -75,23 +75,27 @@
     st - store
     lea - load effective address
     call - branch and store return address
-    breq - branch if zero
     brne - branch if not zero
+    breq - branch if zero
 
 
 ## Interesting encodings
 
     or r0,$0,r0     => nop (0x0000)
-    brne n,$-1      => halt (0xffff)
+    breq z,$-1      => halt (0xffff)
     
-    and n,imm5,rd   => set imm5,rd
-    and ra,$-1,rd   => mov ra,rd
+    or z,imm5,rd    => set imm5,rd
+    or ra,$0,rd     => mov ra,rd
     lea $0,rd       => mov pc,rd
-    
+
     xor ra,$-1,rd   => not ra,rd
+    sub z,ra,rd     => neg ra,rd
+
+    sltu z,ra,rd    => seq ra,rd
+    sltu ra,$1,rd   => sne ra,rd
     
-    call ra+imm5,n  => br ra+imm5
-    call imm8,n     => br imm8
+    call ra+imm5,z  => br ra+imm5
+    call imm8,z     => br imm8
 
 
 ## Professor Gheith's Questions
