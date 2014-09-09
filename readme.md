@@ -70,14 +70,14 @@
     st - store
     lea - load effective address
     call - branch and store return address
-    brne - branch if not zero
-    breq - branch if zero
+    brnz - branch if not zero
+    brz - branch if zero
 
 
 ## Interesting encodings
 
     or r0,$0,r0     => nop (0x0000)
-    breq z,$-1      => halt (0xffff)
+    brz z,$-1       => halt (0xffff)
     
     or z,imm5,rd    => set imm5,rd
     or ra,$0,rd     => mov ra,rd
@@ -86,8 +86,8 @@
     xor ra,$-1,rd   => not ra,rd
     sub z,ra,rd     => neg ra,rd
 
-    sltu z,ra,rd    => seq ra,rd
-    sltu ra,$1,rd   => sne ra,rd
+    sltu z,ra,rd    => sz ra,rd
+    sltu ra,$1,rd   => snz ra,rd
     
     call ra+imm5,z  => br ra+imm5
     call imm8,z     => br imm8
@@ -125,7 +125,7 @@ word-sized, read/write port. Aside from fetches, only ld and st can access memor
  * Function pointers can be implemented with the register based call intructions
 
 ##### How do we implement control structures: if / while / switch?
- * If/While statements can be implemened using the breq/brne instructions to 
+ * If/While statements can be implemened using the brz/brnz instructions to 
    branch to relative addresses on the state of a register. This can be 
    combined with stl/stlu/sub to branch on other conditions.
  * Switch statements can be implemented with a jump table looked up using 

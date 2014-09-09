@@ -33,8 +33,8 @@ Instruction List
 | 0xb | st      | B        | C        | store word           | mem[ra + imm5] := rd             | mem[pc + imm8] := rd                |
 | 0xc | lea     | B        | C        | load address         | rd := ra + imm5                  | rd := pc + imm8                     |
 | 0xd | call    | B        | C        | branch and link      | rd := pc+1 ; pc := ra + imm5     | rd := pc+1 ; pc := pc + imm8        |
-| 0xe | brne    | B        | C        | branch if not zero   | pc := ra + imm5 if rd != 0       | pc := pc + imm8 if rd != 0          |
-| 0xf | breq    | B        | C        | branch if zero       | pc := ra + imm5 if rd == 0       | pc := pc + imm8 if rd == 0          |
+| 0xe | brnz    | B        | C        | branch if not zero   | pc := ra + imm5 if rd != 0       | pc := pc + imm8 if rd != 0          |
+| 0xf | brz     | B        | C        | branch if zero       | pc := ra + imm5 if rd == 0       | pc := pc + imm8 if rd == 0          |
 
 
 Instruction Decoding
@@ -70,13 +70,13 @@ Instruction Decoding
 | 0xb0 | st ra+imm5,rd     | B    | 2         | 0          | w align    | mem[ra + imm5] := rd                |
 | 0xc0 | lea ra+imm5,rd    | B    | 2         | 1          |            | rd := ra + imm5                     |
 | 0xd0 | call ra+imm5,rd   | B    | 1         | 1          |            | rd := pc+1 ; pc := ra + imm5        |
-| 0xe0 | brne rd,ra+imm5   | B    | 1         | 0          |            | pc := ra + imm5 if rd != 0          |
-| 0xf0 | breq rd,ra+imm5   | B    | 1         | 0          |            | pc := ra + imm5 if rd == 0          |
+| 0xe0 | brnz rd,ra+imm5   | B    | 1         | 0          |            | pc := ra + imm5 if rd != 0          |
+| 0xf0 | brz rd,ra+imm5    | B    | 1         | 0          |            | pc := ra + imm5 if rd == 0          |
 | ---- | ----------------- | ---- | --------- | ---------- | ---------- | ----------------------------------- |
 | 0xa8 | ld imm8,rd        | C    | 0         | 1          | r align    | rd := mem[pc + imm8]                |
 | 0xb8 | st imm8,rd        | C    | 1         | 0          | w align    | mem[pc + imm8] := rd                |
 | 0xc8 | lea imm8,rd       | C    | 1         | 1          |            | rd := pc + imm8                     |
 | 0xd8 | call imm8,rd      | C    | 0         | 1          |            | rd := pc+1 ; pc := pc + imm8        |
-| 0xe8 | brne rd,imm8      | C    | 1         | 0          |            | pc := pc + imm8 if rd != 0          |
-| 0xf8 | breq rd,imm8      | C    | 1         | 0          |            | pc := pc + imm8 if rd == 0          |
+| 0xe8 | brnz rd,imm8      | C    | 1         | 0          |            | pc := pc + imm8 if rd != 0          |
+| 0xf8 | brz rd,imm8       | C    | 1         | 0          |            | pc := pc + imm8 if rd == 0          |
 
