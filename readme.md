@@ -30,15 +30,15 @@
 
     Type A:
     | op |f| rd| ra|  | rb|
-    |xxxx|1|xxx|xxx|00|xxx|
+    |xxxx|x|xxx|xxx|00|xxx|
     
     Type B:
     | op |f| rd| ra| imm5|
-    |xxxx|0|xxx|xxx|xxxxx|
+    |xxxx|x|xxx|xxx|xxxxx|
     
     Type C:
     | op |f| rd|  imm8  |
-    |xxxx|1|xxx|xxxxxxxx|
+    |xxxx|x|xxx|xxxxxxxx|
     
     op - 4 bit opcode encodes 16 general opcodes
     f - format bit indicates format of instruction
@@ -81,13 +81,11 @@
     
     or z,imm5,rd    => set imm5,rd
     or ra,$0,rd     => mov ra,rd
-    lea $0,rd       => mov pc,rd
-
     xor ra,$-1,rd   => not ra,rd
     sub z,ra,rd     => neg ra,rd
 
-    sltu z,ra,rd    => sz ra,rd
     sltu ra,$1,rd   => snz ra,rd
+    sltu z,ra,rd    => sz ra,rd
     
     call ra+imm5,z  => br ra+imm5
     call imm8,z     => br imm8
