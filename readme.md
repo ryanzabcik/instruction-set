@@ -76,16 +76,16 @@
 
 ## Interesting encodings
 
-    or r0,$0,r0     => nop (0x0000)
+    or r0,r0,$0     => nop (0x0000)
     brz z,$-1       => halt (0xffff)
     
-    or z,imm5,rd    => set imm5,rd
-    or ra,$0,rd     => mov ra,rd
-    xor ra,$-1,rd   => not ra,rd
-    sub z,ra,rd     => neg ra,rd
+    or rd,z,imm5    => set rd,imm5
+    or rd,ra,$0     => mov rd,ra
+    xor rd,ra,$-1   => not rd,ra
+    sub rd,z,ra     => neg rd,ra
 
-    sltu ra,$1,rd   => snz ra,rd
-    sltu z,ra,rd    => sz ra,rd
+    sltu rd,ra,$1   => snz rd,ra
+    sltu rd,z,ra    => sz rd,ra
     
     call ra+imm5,z  => br ra+imm5
     call imm8,z     => br imm8

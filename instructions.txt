@@ -42,50 +42,50 @@ Instruction Encoding
 
 | Assembly          | Encoding         | Reads | Writes | Mem | Operation                           |
 | ----------------- | ---------------- | ----- | ------ | --- | ----------------------------------- |
-| or ra,imm5,rd     | 00000dddaaaiiiii | 1     | 1      |     | rd := ra or imm5                    |
-| xor ra,imm5,rd    | 00010dddaaaiiiii | 1     | 1      |     | rd := ra xor imm5                   |
-| and ra,imm5,rd    | 00100dddaaaiiiii | 1     | 1      |     | rd := ra and imm5                   |
-| andn ra,imm5,rd   | 00110dddaaaiiiii | 1     | 1      |     | rd := ra and not imm5               |
-| add ra,imm5,rd    | 01000dddaaaiiiii | 1     | 1      |     | rd := ra + imm5                     |
-| sub ra,imm5,rd    | 01010dddaaaiiiii | 1     | 1      |     | rd := ra - imm5                     |
-| slt ra,imm5,rd    | 01100dddaaaiiiii | 1     | 1      |     | rd := ra < imm5                     |
-| sltu ra,imm5,rd   | 01110dddaaaiiiii | 1     | 1      |     | rd := ra < imm5 (unsigned)          |
+| or rd,ra,imm5     | 00000dddaaaiiiii | 1     | 1      |     | rd := ra or imm5                    |
+| xor rd,ra,imm5    | 00010dddaaaiiiii | 1     | 1      |     | rd := ra xor imm5                   |
+| and rd,ra,imm5    | 00100dddaaaiiiii | 1     | 1      |     | rd := ra and imm5                   |
+| andn rd,ra,imm5   | 00110dddaaaiiiii | 1     | 1      |     | rd := ra and not imm5               |
+| add rd,ra,imm5    | 01000dddaaaiiiii | 1     | 1      |     | rd := ra + imm5                     |
+| sub rd,ra,imm5    | 01010dddaaaiiiii | 1     | 1      |     | rd := ra - imm5                     |
+| slt rd,ra,imm5    | 01100dddaaaiiiii | 1     | 1      |     | rd := ra < imm5                     |
+| sltu rd,ra,imm5   | 01110dddaaaiiiii | 1     | 1      |     | rd := ra < imm5 (unsigned)          |
 | ----------------- | ---------------- | ----- | ------ | --- |------------------------------------ |
-| or ra,rb,rd       | 00001dddaaa00bbb | 2     | 1      |     | rd := ra or rb                      |
-| xor ra,rb,rd      | 00011dddaaa00bbb | 2     | 1      |     | rd := ra xor rb                     |
-| and ra,rb,rd      | 00101dddaaa00bbb | 2     | 1      |     | rd := ra and rb                     |
-| andn ra,rb,rd     | 00111dddaaa00bbb | 2     | 1      |     | rd := ra and not rb                 |
-| add ra,rb,rd      | 01001dddaaa00bbb | 2     | 1      |     | rd := ra + rb                       |
-| sub ra,rb,rd      | 01011dddaaa00bbb | 2     | 1      |     | rd := ra - rb                       |
-| slt ra,rb,rd      | 01101dddaaa00bbb | 2     | 1      |     | rd := ra < rb                       |
-| sltu ra,rb,rd     | 01111dddaaa00bbb | 2     | 1      |     | rd := ra < rb (unsigned)            |
+| or rd,ra,rb       | 00001dddaaa00bbb | 2     | 1      |     | rd := ra or rb                      |
+| xor rd,ra,rb      | 00011dddaaa00bbb | 2     | 1      |     | rd := ra xor rb                     |
+| and rd,ra,rb      | 00101dddaaa00bbb | 2     | 1      |     | rd := ra and rb                     |
+| andn rd,ra,rb     | 00111dddaaa00bbb | 2     | 1      |     | rd := ra and not rb                 |
+| add rd,ra,rb      | 01001dddaaa00bbb | 2     | 1      |     | rd := ra + rb                       |
+| sub rd,ra,rb      | 01011dddaaa00bbb | 2     | 1      |     | rd := ra - rb                       |
+| slt rd,ra,rb      | 01101dddaaa00bbb | 2     | 1      |     | rd := ra < rb                       |
+| sltu rd,ra,rb     | 01111dddaaa00bbb | 2     | 1      |     | rd := ra < rb (unsigned)            |
 | ----------------- | ---------------- | ----- | ------ | --- | ----------------------------------- |
-| shl ra,imm4,rd    | 10000dddaaa0iiii | 1     | 1      |     | rd := ra << imm4                    |
-| shrl ra,imm4,rd   | 10010dddaaa0iiii | 1     | 1      |     | rd := ra >> imm4 (logical)          |
-| shra ra,imm4,rd   | 10010dddaaa1iiii | 1     | 1      |     | rd := ra >> imm4 (arithmetic)       |
-| mul ra,rb,rd      | 10001dddaaa00bbb | 2     | 2      |     | (rd,ra) := ra * rb                  |
-| div ra,rb,rd      | 10011dddaaa00bbb | 2     | 2      |     | ra := ra / rb ; rd := ra % rb       |
+| shl rd,ra,imm4    | 10000dddaaa0iiii | 1     | 1      |     | rd := ra << imm4                    |
+| shrl rd,ra,imm4   | 10010dddaaa0iiii | 1     | 1      |     | rd := ra >> imm4 (logical)          |
+| shra rd,ra,imm4   | 10010dddaaa1iiii | 1     | 1      |     | rd := ra >> imm4 (arithmetic)       |
+| mul rd,ra,rb      | 10001dddaaa00bbb | 2     | 2      |     | (rd,ra) := ra * rb                  |
+| div rd,ra,rb      | 10011dddaaa00bbb | 2     | 2      |     | ra := ra / rb ; rd := ra % rb       |
 | ----------------- | ---------------- | ----- | ------ | --- | ----------------------------------- |
-| ld ra+imm5,rd     | 10100dddaaaiiiii | 1     | 1      | r   | rd := mem[ra + imm5]                |
-| st ra+imm5,rd     | 10110dddaaaiiiii | 2     | 0      | w   | mem[ra + imm5] := rd                |
-| lea ra+imm5,rd    | 11000dddaaaiiiii | 2     | 1      |     | rd := ra + imm5                     |
-| call ra+imm5,rd   | 11010dddaaaiiiii | 1     | 1      |     | rd := pc+1 ; pc := ra + imm5        |
+| ld rd,ra+imm5     | 10100dddaaaiiiii | 1     | 1      | r   | rd := mem[ra + imm5]                |
+| st rd,ra+imm5     | 10110dddaaaiiiii | 2     | 0      | w   | mem[ra + imm5] := rd                |
+| lea rd,ra+imm5    | 11000dddaaaiiiii | 2     | 1      |     | rd := ra + imm5                     |
+| call rd,ra+imm5   | 11010dddaaaiiiii | 1     | 1      |     | rd := pc+1 ; pc := ra + imm5        |
 | brnz rd,ra+imm5   | 11100dddaaaiiiii | 1     | 0      |     | pc := ra + imm5 if rd != 0          |
 | brz rd,ra+imm5    | 11110dddaaaiiiii | 1     | 0      |     | pc := ra + imm5 if rd == 0          |
 | ----------------- | ---------------- | ----- | ------ | --- | ----------------------------------- |
-| ld imm8,rd        | 10101dddiiiiiiii | 0     | 1      | r   | rd := mem[pc + imm8]                |
-| st imm8,rd        | 10111dddiiiiiiii | 1     | 0      | w   | mem[pc + imm8] := rd                |
-| lea imm8,rd       | 11001dddiiiiiiii | 1     | 1      |     | rd := pc + imm8                     |
-| call imm8,rd      | 11011dddiiiiiiii | 0     | 1      |     | rd := pc+1 ; pc := pc + imm8        |
+| ld rd,imm8        | 10101dddiiiiiiii | 0     | 1      | r   | rd := mem[pc + imm8]                |
+| st rd,imm8        | 10111dddiiiiiiii | 1     | 0      | w   | mem[pc + imm8] := rd                |
+| lea rd,imm8       | 11001dddiiiiiiii | 1     | 1      |     | rd := pc + imm8                     |
+| call rd,imm8      | 11011dddiiiiiiii | 0     | 1      |     | rd := pc+1 ; pc := pc + imm8        |
 | brnz rd,imm8      | 11101dddiiiiiiii | 1     | 0      |     | pc := pc + imm8 if rd != 0          |
 | brz rd,imm8       | 11111dddiiiiiiii | 1     | 0      |     | pc := pc + imm8 if rd == 0          |
 | ----------------- | ---------------- | ----- | ------ | --- | ----------------------------------- |
-| set imm5,rd       | 00000ddd111iiiii | 1     | 1      |     | rd := imm5                          |
-| mov ra,rd         | 00000dddaaa00000 | 1     | 1      |     | rd := ra                            |
-| not ra,rd         | 00010dddaaa11111 | 1     | 1      |     | rd := not ra                        |
-| neg ra,rd         | 01011ddd11100aaa | 2     | 1      |     | rd := neg ra                        |
-| snz ra,rd         | 01110dddaaa00001 | 2     | 1      |     | rd := r == 0                        |
-| sz ra,rd          | 01111ddd11100aaa | 2     | 1      |     | rd := r != 0                        |
+| set rd,imm5       | 00000ddd111iiiii | 1     | 1      |     | rd := imm5                          |
+| mov rd,ra         | 00000dddaaa00000 | 1     | 1      |     | rd := ra                            |
+| not rd,ra         | 00010dddaaa11111 | 1     | 1      |     | rd := not ra                        |
+| neg rd,ra         | 01011ddd11100aaa | 2     | 1      |     | rd := neg ra                        |
+| snz rd,ra         | 01110dddaaa00001 | 2     | 1      |     | rd := r == 0                        |
+| sz rd,ra          | 01111ddd11100aaa | 2     | 1      |     | rd := r != 0                        |
 | br ra+imm5        | 11010111aaaiiiii | 1     | 1      |     | pc := ra + imm5                     |
 | br imm8           | 11011111iiiiiiii | 0     | 1      |     | pc := pc + imm8                     |
 | ----------------- | ---------------- | ----- | ------ | --- | ----------------------------------- |
