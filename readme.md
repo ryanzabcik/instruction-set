@@ -19,7 +19,7 @@
  - Register relative addressing and branching
  - PC relative addressing and branching
  - Software interrupts for OS calls
- - Extendable instruction set for non-portable applications
+ - Extendable instruction for non-portable applications
 
 
 ## Registers
@@ -39,7 +39,7 @@
     | op |f| rd| ra| imm5|
     |xxxx|x|xxx|xxx|xxxxx|
     
-    Type C/E:
+    Type C:
     | op |f| rd|  imm8  |
     |xxxx|x|xxx|xxxxxxxx|
     
@@ -75,8 +75,7 @@
     brnz - branch if not zero
     brz - branch if zero
 
-    int - software interrupt
-    ext - non-portable extension opcodes
+    swi - software interrupt
 
 
 ## Interesting encodings
@@ -156,4 +155,11 @@ register + imm5 or pc + imm8.
 ##### Implicit vs. explicit operands / coupling?
 All operands are explicit for every instruction and no registers 
 are implicitly used.
+
+##### How do you add instructions?
+The ext opcode (0b01110) is reserved for processor specific extensions to
+the instruction set. The instruction's actual decoding depends on the specific
+implementation. It is intended for adding hardware specific functionality and 
+for testing new instructions. Portable applications should not rely on the 
+functionality of ext, and a simple c16 implementation may leave it undefined.
 
