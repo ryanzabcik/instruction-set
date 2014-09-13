@@ -3,6 +3,7 @@
 ## Goals:
  - Simple
  - Consistent
+ - Flexible
  - Shared logic between similar instructions
  - Make common operations easy and uncommon operations possible
 
@@ -17,6 +18,8 @@
  - Arithmetic instructions with immediates
  - Register relative addressing and branching
  - PC relative addressing and branching
+ - Software interrupts for OS calls
+ - Extendable instruction set for non-portable applications
 
 
 ## Registers
@@ -28,7 +31,7 @@
 
 ## Instruction Encoding
 
-    Type A:
+    Type A/D:
     | op |f| rd| ra|  | rb|
     |xxxx|x|xxx|xxx|00|xxx|
     
@@ -36,7 +39,7 @@
     | op |f| rd| ra| imm5|
     |xxxx|x|xxx|xxx|xxxxx|
     
-    Type C:
+    Type C/E:
     | op |f| rd|  imm8  |
     |xxxx|x|xxx|xxxxxxxx|
     
@@ -51,14 +54,13 @@
 
 ## Instruction Set
 
-    or - bitwise or
-    xor - bitwise xor
-    and - bitwise and
-    andn - bitwise and with not
     add - integer addition
     sub - integer subtraction
     slt - set if less than
     sltu - set if less than unsigned
+    and - bitwise and
+    or - bitwise or
+    xor - bitwise xor
     
     mul - multiply
     div - divide
@@ -73,14 +75,17 @@
     brnz - branch if not zero
     brz - branch if zero
 
+    int - software interrupt
+    ext - non-portable extension opcodes
+
 
 ## Interesting encodings
 
-    or r0,r0,$0     => nop (0x0000)
+    add r0,r0,$0    => nop (0x0000)
     brz z,$-1       => halt (0xffff)
     
-    or rd,z,imm5    => set rd,imm5
-    or rd,ra,$0     => mov rd,ra
+    add rd,z,imm5   => set rd,imm5
+    add rd,ra,$0    => mov rd,ra
     xor rd,ra,$-1   => not rd,ra
     sub rd,z,ra     => neg rd,ra
 
