@@ -31,7 +31,7 @@
 
 ## Instruction Encoding
 
-    Type A/D:
+    Type A:
     | op |f| rd| ra|  | rb|
     |xxxx|x|xxx|xxx|00|xxx|
     
