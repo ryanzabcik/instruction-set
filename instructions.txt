@@ -42,23 +42,21 @@ Instruction Encoding
 
 | Assembly          | Encoding         | Reads | Writes | Mem | Operation                           |
 | ----------------- | ---------------- | ----- | ------ | --- | ----------------------------------- |
-| or rd,ra,imm5     | 00000dddaaaiiiii | 1     | 1      |     | rd := ra or imm5                    |
-| xor rd,ra,imm5    | 00010dddaaaiiiii | 1     | 1      |     | rd := ra xor imm5                   |
-| and rd,ra,imm5    | 00100dddaaaiiiii | 1     | 1      |     | rd := ra and imm5                   |
-| andn rd,ra,imm5   | 00110dddaaaiiiii | 1     | 1      |     | rd := ra and not imm5               |
-| add rd,ra,imm5    | 01000dddaaaiiiii | 1     | 1      |     | rd := ra + imm5                     |
-| sub rd,ra,imm5    | 01010dddaaaiiiii | 1     | 1      |     | rd := ra - imm5                     |
-| slt rd,ra,imm5    | 01100dddaaaiiiii | 1     | 1      |     | rd := ra < imm5                     |
-| sltu rd,ra,imm5   | 01110dddaaaiiiii | 1     | 1      |     | rd := ra < imm5 (unsigned)          |
+| add rd,ra,imm5    | 00000dddaaaiiiii | 1     | 1      |     | rd := ra + imm5                     |
+| sub rd,ra,imm5    | 00010dddaaaiiiii | 1     | 1      |     | rd := ra - imm5                     |
+| slt rd,ra,imm5    | 00100dddaaaiiiii | 1     | 1      |     | rd := ra < imm5                     |
+| sltu rd,ra,imm5   | 00110dddaaaiiiii | 1     | 1      |     | rd := ra < imm5 (unsigned)          |
+| and rd,ra,imm5    | 01000dddaaaiiiii | 1     | 1      |     | rd := ra and imm5                   |
+| or rd,ra,imm5     | 01010dddaaaiiiii | 1     | 1      |     | rd := ra or imm5                    |
+| xor rd,ra,imm5    | 01100dddaaaiiiii | 1     | 1      |     | rd := ra xor imm5                   |
 | ----------------- | ---------------- | ----- | ------ | --- |------------------------------------ |
-| or rd,ra,rb       | 00001dddaaa00bbb | 2     | 1      |     | rd := ra or rb                      |
-| xor rd,ra,rb      | 00011dddaaa00bbb | 2     | 1      |     | rd := ra xor rb                     |
-| and rd,ra,rb      | 00101dddaaa00bbb | 2     | 1      |     | rd := ra and rb                     |
-| andn rd,ra,rb     | 00111dddaaa00bbb | 2     | 1      |     | rd := ra and not rb                 |
-| add rd,ra,rb      | 01001dddaaa00bbb | 2     | 1      |     | rd := ra + rb                       |
-| sub rd,ra,rb      | 01011dddaaa00bbb | 2     | 1      |     | rd := ra - rb                       |
-| slt rd,ra,rb      | 01101dddaaa00bbb | 2     | 1      |     | rd := ra < rb                       |
-| sltu rd,ra,rb     | 01111dddaaa00bbb | 2     | 1      |     | rd := ra < rb (unsigned)            |
+| add rd,ra,rb      | 00001dddaaa00bbb | 2     | 1      |     | rd := ra + rb                       |
+| sub rd,ra,rb      | 00011dddaaa00bbb | 2     | 1      |     | rd := ra - rb                       |
+| slt rd,ra,rb      | 00101dddaaa00bbb | 2     | 1      |     | rd := ra < rb                       |
+| sltu rd,ra,rb     | 00111dddaaa00bbb | 2     | 1      |     | rd := ra < rb (unsigned)            |
+| and rd,ra,rb      | 01001dddaaa00bbb | 2     | 1      |     | rd := ra and rb                     |
+| or rd,ra,rb       | 01011dddaaa00bbb | 2     | 1      |     | rd := ra or rb                      |
+| xor rd,ra,rb      | 01101dddaaa00bbb | 2     | 1      |     | rd := ra xor rb                     |
 | ----------------- | ---------------- | ----- | ------ | --- | ----------------------------------- |
 | shl rd,ra,imm4    | 10000dddaaa0iiii | 1     | 1      |     | rd := ra << imm4                    |
 | shrl rd,ra,imm4   | 10010dddaaa0iiii | 1     | 1      |     | rd := ra >> imm4 (logical)          |
