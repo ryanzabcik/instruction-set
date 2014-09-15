@@ -91,8 +91,8 @@
     sltu rd,ra,$1   => snz rd,ra
     sltu rd,z,ra    => sz rd,ra
     
-    call ra+imm5,z  => br ra+imm5
-    call imm8,z     => br imm8
+    call z,ra+imm5  => br ra+imm5
+    call z,imm8     => br imm8
 
 
 ## Professor Gheith's Questions

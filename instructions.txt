@@ -32,7 +32,7 @@ Instruction List
 | 0xa | ld      | B        | C        | load word            | rd := mem[ra + imm5]             | rd := mem[pc + imm8]                |
 | 0xb | st      | B        | C        | store word           | mem[ra + imm5] := rd             | mem[pc + imm8] := rd                |
 | 0xc | lea     | B        | C        | load address         | rd := ra + imm5                  | rd := pc + imm8                     |
-| 0xd | call    | B        | C        | branch and link      | rd := pc+1 ; pc := ra + imm5     | rd := pc+1 ; pc := pc + imm8        |
+| 0xd | call    | B        | C        | branch and link      | rd := pc ; pc := ra + imm5       | rd := pc ; pc := pc + imm8          |
 | 0xe | brnz    | B        | C        | branch if not zero   | pc := ra + imm5 if rd != 0       | pc := pc + imm8 if rd != 0          |
 | 0xf | brz     | B        | C        | branch if zero       | pc := ra + imm5 if rd == 0       | pc := pc + imm8 if rd == 0          |
 
@@ -67,14 +67,14 @@ Instruction Encoding
 | ld rd,ra+imm5     | 10100dddaaaiiiii | 1     | 1      | r   | rd := mem[ra + imm5]                |
 | st rd,ra+imm5     | 10110dddaaaiiiii | 2     | 0      | w   | mem[ra + imm5] := rd                |
 | lea rd,ra+imm5    | 11000dddaaaiiiii | 2     | 1      |     | rd := ra + imm5                     |
-| call rd,ra+imm5   | 11010dddaaaiiiii | 1     | 1      |     | rd := pc+1 ; pc := ra + imm5        |
+| call rd,ra+imm5   | 11010dddaaaiiiii | 1     | 1      |     | rd := pc ; pc := ra + imm5          |
 | brnz rd,ra+imm5   | 11100dddaaaiiiii | 1     | 0      |     | pc := ra + imm5 if rd != 0          |
 | brz rd,ra+imm5    | 11110dddaaaiiiii | 1     | 0      |     | pc := ra + imm5 if rd == 0          |
 | ----------------- | ---------------- | ----- | ------ | --- | ----------------------------------- |
 | ld rd,imm8        | 10101dddiiiiiiii | 0     | 1      | r   | rd := mem[pc + imm8]                |
 | st rd,imm8        | 10111dddiiiiiiii | 1     | 0      | w   | mem[pc + imm8] := rd                |
 | lea rd,imm8       | 11001dddiiiiiiii | 1     | 1      |     | rd := pc + imm8                     |
-| call rd,imm8      | 11011dddiiiiiiii | 0     | 1      |     | rd := pc+1 ; pc := pc + imm8        |
+| call rd,imm8      | 11011dddiiiiiiii | 0     | 1      |     | rd := pc ; pc := pc + imm8          |
 | brnz rd,imm8      | 11101dddiiiiiiii | 1     | 0      |     | pc := pc + imm8 if rd != 0          |
 | brz rd,imm8       | 11111dddiiiiiiii | 1     | 0      |     | pc := pc + imm8 if rd == 0          |
 | ----------------- | ---------------- | ----- | ------ | --- | ----------------------------------- |
@@ -89,8 +89,8 @@ Instruction Encoding
 | ----------------- | ---------------- | ----- | ------ | --- | ----------------------------------- |
 | swi imm8          | 01111000iiiiiiii | 0     | 0      |     | software interrupt imm8             |
 | ----------------- | ---------------- | ----- | ------ | --- | ----------------------------------- |
-| call ra+imm5      | 11010101aaaiiiii | 1     | 1      |     | r5 := pc+1 ; pc := ra + imm5        |
-| call imm8         | 11011101iiiiiiii | 0     | 1      |     | r5 := pc+1 ; pc := pc + imm8        |
+| call ra+imm5      | 11010101aaaiiiii | 1     | 1      |     | r5 := pc ; pc := ra + imm5          |
+| call imm8         | 11011101iiiiiiii | 0     | 1      |     | r5 := pc ; pc := pc + imm8          |
 | ret               | 1101011110100000 | 1     | 1      |     | pc := r5                            |
 | ----------------- | ---------------- | ----- | ------ | --- | ----------------------------------- |
 | nop               | 0000000000000000 | 1     | 1      |     | skip instruction                    |
