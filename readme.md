@@ -3,6 +3,7 @@
 ## Goals:
  - Simple
  - Consistent
+ - Flexible
  - Shared logic between similar instructions
  - Make common operations easy and uncommon operations possible
 
@@ -17,6 +18,8 @@
  - Arithmetic instructions with immediates
  - Register relative addressing and branching
  - PC relative addressing and branching
+ - Software interrupts for OS calls
+ - Extendable instruction for non-portable applications
 
 
 ## Registers
@@ -51,14 +54,13 @@
 
 ## Instruction Set
 
-    or - bitwise or
-    xor - bitwise xor
-    and - bitwise and
-    andn - bitwise and with not
     add - integer addition
     sub - integer subtraction
     slt - set if less than
     sltu - set if less than unsigned
+    and - bitwise and
+    or - bitwise or
+    xor - bitwise xor
     
     mul - multiply
     div - divide
@@ -73,14 +75,16 @@
     brnz - branch if not zero
     brz - branch if zero
 
+    swi - software interrupt
+
 
 ## Interesting encodings
 
-    or r0,r0,$0     => nop (0x0000)
+    add r0,r0,$0    => nop (0x0000)
     brz z,$-1       => halt (0xffff)
     
-    or rd,z,imm5    => set rd,imm5
-    or rd,ra,$0     => mov rd,ra
+    add rd,z,imm5   => set rd,imm5
+    add rd,ra,$0    => mov rd,ra
     xor rd,ra,$-1   => not rd,ra
     sub rd,z,ra     => neg rd,ra
 
@@ -151,4 +155,11 @@ register + imm5 or pc + imm8.
 ##### Implicit vs. explicit operands / coupling?
 All operands are explicit for every instruction and no registers 
 are implicitly used.
+
+##### How do you add instructions?
+The ext opcode (0b01110) is reserved for processor specific extensions to
+the instruction set. The instruction's actual decoding depends on the specific
+implementation. It is intended for adding hardware specific functionality and 
+for testing new instructions. Portable applications should not rely on the 
+functionality of ext, and a simple c16 implementation may leave it undefined.
 
