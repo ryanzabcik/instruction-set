@@ -1,7 +1,8 @@
 Memory Layout
 ----------
-16bit
+32-bit Word Size
 
 Addressing Modes
 ----------------
-Word-Addressable
+Byte Addressable
+

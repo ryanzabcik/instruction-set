@@ -1,4 +1,4 @@
-# Description of the c16
+# Description of the c16_32
 
 ## Goals:
  - Simple
@@ -8,10 +8,10 @@
  - Make common operations easy and uncommon operations possible
 
 ## Features:
- - 16bit word size
- - 8 16bit registers
+ - 32-bit word size
+ - 8 32-bit registers
  - Load/store architecture
- - Word addressable memory
+ - Byte addressable memory
  - Lack of predicates or condition flags
  - MIPS-like conditions
  - Arithmetic instructions with 3 registers
@@ -65,8 +65,7 @@
     mul - multiply
     div - divide
     shl - shift left
-    shrl - shift right logical
-    shra - shift right arithmetic
+    shr - shift right arithmetic
     
     ld - load
     st - store
@@ -150,7 +149,7 @@ specified in consistent positions through the instruction set.
 
 ##### How easy is it to identify branch targets?
 All branch/call instructions use a consistent format of 
-register + imm5 or pc + imm8. 
+register + imm5<<1 or pc + imm8<<1. 
 
 ##### Implicit vs. explicit operands / coupling?
 All operands are explicit for every instruction and no registers 

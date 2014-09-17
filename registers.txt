@@ -3,14 +3,14 @@ Register Layout
 
 | Encoding | Name | Size | Access | Purpose         |
 | -------- | ---- | ---- | ------ | --------------- |
-| R0       | R0   | 16   | rw     | general         |
-| R1       | R1   | 16   | rw     | general         |
-| R2       | R2   | 16   | rw     | general         |
-| R3       | R3   | 16   | rw     | general         |
-| R4       | R4   | 16   | rw     | general         |
-| R5       | R5   | 16   | rw     | general         |
-| R6       | R6   | 16   | rw     | general         |
-| R7       | Z    | 16   | r      | constant (0)    |
-|          | PC   | 16   |        | program counter |
+| R0       | R0   | 32   | rw     | general         |
+| R1       | R1   | 32   | rw     | general         |
+| R2       | R2   | 32   | rw     | general         |
+| R3       | R3   | 32   | rw     | general         |
+| R4       | R4   | 32   | rw     | general         |
+| R5       | R5   | 32   | rw     | general         |
+| R6       | R6   | 32   | rw     | general         |
+| R7       | Z    | 32   | r      | constant (0)    |
+|          | PC   | 32   |        | program counter |
 
 
